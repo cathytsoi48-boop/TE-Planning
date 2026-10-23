@@ -45,7 +45,7 @@
             position: relative; z-index: 10;
         }
 
-        /* ========== 导航栏 (新增了开始，共8个项) ========== */
+        /* ========== 导航栏 ========== */
         .navbar {
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(10, 20, 40, 0.65); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
@@ -58,15 +58,44 @@
         .logo-en { font-size: 1.4rem; font-weight: 700; color: #a4b0e0; letter-spacing: 1px; }
         .logo-sub { font-size: 0.9rem; color: #6a7baa; margin-top: 4px; letter-spacing: 0.5px; }
         
-        .nav-links { display: flex; align-items: flex-start; gap: 5px; height: 100px; position: relative; }
+        .nav-links { display: flex; align-items: flex-start; gap: 8px; height: 100px; position: relative; }
         .nav-item { position: relative; text-decoration: none; display: flex; justify-content: center; align-items: center; padding: 10px 12px; transition: all 0.3s ease; transform: translateY(0); cursor: pointer; }
         .nav-text { font-size: 1.05rem; font-weight: 600; color: #a4b0e0; letter-spacing: 1px; transition: all 0.3s ease; z-index: 2; }
         
+        /* ⭐️ 专属导航栏的“开始 / START”样式 ⭐️ */
+        .nav-start {
+            padding: 5px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px; /* 与后面菜单拉开一点距离 */
+        }
+        .nav-start-cn {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px #6a9eff;
+            transition: all 0.3s ease;
+        }
+        .nav-start-en {
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            font-size: 0.85rem;
+            color: #a4b0e0;
+            letter-spacing: 2px;
+            margin-top: 2px;
+            transition: all 0.3s ease;
+        }
+        .nav-start:hover .nav-start-cn { text-shadow: 0 0 20px #ffffff, 0 0 30px #6a9eff; transform: scale(1.05); }
+        .nav-start:hover .nav-start-en { color: #ffffff; text-shadow: 0 0 10px #aaccff; }
+
         /* 伪元素竖线 */
         .nav-item::after { content: ''; position: absolute; width: 1px; background: rgba(255, 255, 255, 0.4); box-shadow: 0 0 8px rgba(164, 176, 224, 0.6); transition: all 0.3s ease; z-index: 1; }
         
         /* 重新分配8个菜单项的高低和线条 */
-        .wave-1::after { left: -5px; top: 20px; height: 50px; } 
+        .wave-1::after { left: -8px; top: 20px; height: 50px; } 
         .wave-2::after { right: -5px; bottom: 20px; height: 70px; } 
         .wave-3::after { left: -5px; top: 40px; height: 40px; } 
         .wave-4::after { right: -5px; top: 10px; height: 60px; } 
@@ -99,7 +128,7 @@
         .worldview-title span { background: rgba(40, 60, 110, 0.7); padding: 4px 18px; border-radius: 40px; font-size: 1rem; color: #b0c8ff; border: 1px solid rgba(150, 180, 255, 0.3); }
         .worldview-text { font-size: 1.2rem; line-height: 1.9; color: #c8d4f0; text-indent: 2em; background: rgba(10, 20, 45, 0.5); padding: 20px 30px; border-radius: 30px; border-left: 8px solid #6a9eff; }
 
-        /* ⭐️ 挪到简介下面的 START 入口 ⭐️ */
+        /* ⭐️ 简介下面巨大的 START 入口 ⭐️ */
         .start-hero {
             display: flex; justify-content: center; align-items: center;
             height: 300px; margin-bottom: 50px; position: relative; cursor: pointer;
@@ -147,8 +176,7 @@
         #page-explore {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at center, #1e2a4a 0%, #0a0f24 60%, #020411 100%);
-            z-index: 100; /* 覆盖主页但低于转场层 */
-            display: none; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 100; display: none; flex-direction: column; justify-content: center; align-items: center;
             opacity: 0; transition: opacity 0.8s ease; overflow: hidden;
         }
         #page-explore.show { display: flex; opacity: 1; }
@@ -163,7 +191,7 @@
         .explore-en { font-family: 'Georgia', serif; font-size: 1.6rem; font-style: italic; color: #94a3b8; transition: 0.4s; }
         .explore-item:hover .explore-en { color: #aaccff; }
         
-        /* 返回按钮 (加了英文) */
+        /* 返回按钮 */
         .back-to-home {
             position: absolute; bottom: 40px; color: #6a7baa; font-size: 1.05rem;
             letter-spacing: 2px; transition: 0.3s; cursor: pointer;
@@ -172,7 +200,7 @@
         .back-to-home:hover { color: #ffffff; text-shadow: 0 0 15px #aaccff; }
         .back-to-home span { font-family: 'Georgia', serif; font-style: italic; font-size: 1.1rem; opacity: 0.7; }
 
-        /* ========== 转场动画 (线条切割) ========== */
+        /* ========== 转场动画 ========== */
         #transition-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000000; z-index: 9999; display: none;
@@ -205,6 +233,7 @@
             .nav-links { height: auto; flex-wrap: wrap; justify-content: center; gap: 10px; }
             .wave-1, .wave-2, .wave-3, .wave-4, .wave-5, .wave-6, .wave-7, .wave-8 { transform: translateY(0); padding: 5px; }
             .nav-item::after { display: none !important; }
+            .nav-start { margin-right: 0; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 10px; margin-bottom: 5px;}
             
             .start-hero { height: 200px; margin-bottom: 30px; }
             .start-text-cn { font-size: 3rem; }
@@ -234,8 +263,11 @@
                 <div class="logo-sub">Omni-Planning</div>
             </div>
             <div class="nav-links">
-                <!-- 新增的“开始”按钮，点击触发转场 -->
-                <a href="javascript:void(0)" class="nav-item wave-1" onclick="triggerTransition()"><span class="nav-text">开始</span></a>
+                <!-- ⭐️ 导航栏的“开始 / START”按钮 ⭐️ -->
+                <a href="javascript:void(0)" class="nav-item nav-start wave-1" onclick="triggerTransition()">
+                    <span class="nav-start-cn">开始</span>
+                    <span class="nav-start-en">START</span>
+                </a>
                 
                 <!-- 导航跳转逻辑 -->
                 <a href="javascript:void(0)" class="nav-item wave-2" onclick="switchView('home')"><span class="nav-text">首页</span></a>
@@ -298,20 +330,19 @@
             </footer>
         </div>
 
-        <!-- ================= 视图2：角色图鉴 (独立页面) ================= -->
+        <!-- ================= 视图2：角色图鉴 ================= -->
         <div id="view-character" class="view-container">
             <section class="gallery-section" style="margin-top: 40px;">
                 <div class="section-header">
                     <h2>✦ 角色图鉴 ✦</h2>
                     <div class="badge">✨ 共 <span id="characterCount">3</span> 位角色 ✨</div>
                 </div>
-                <!-- 角色卡片会被JS渲染在这里 -->
                 <div class="character-grid" id="characterGrid"></div>
             </section>
         </div>
     </div>
 
-    <!-- ================= 视图3：探索页 (全屏覆盖) ================= -->
+    <!-- ================= 视图3：探索页 ================= -->
     <div id="page-explore">
         <div class="explore-header">
             <h1>What would you like to explore?</h1>
@@ -329,7 +360,6 @@
             </div>
         </div>
 
-        <!-- 返回主页，加上了英文 -->
         <div class="back-to-home" onclick="closeExplore()">
             ← 返回主页 <span>Back to home</span>
         </div>
@@ -399,20 +429,15 @@
 
 
         // =========================================
-        // 2. 核心逻辑：视图切换系统 (主页 <-> 角色页)
+        // 2. 核心逻辑：视图切换
         // =========================================
         function switchView(viewName) {
-            // 隐藏所有视图
             document.querySelectorAll('.view-container').forEach(el => el.classList.remove('active'));
-            
-            // 显示对应的视图
             if (viewName === 'home') {
                 document.getElementById('view-home').classList.add('active');
             } else if (viewName === 'character') {
                 document.getElementById('view-character').classList.add('active');
             }
-            
-            // 顺滑滚动到顶部
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -423,26 +448,22 @@
         const transitionOverlay = document.getElementById('transition-overlay');
         const explorePage = document.getElementById('page-explore');
 
-        // 触发转场（点击“开始”）
         function triggerTransition() {
             transitionOverlay.style.display = 'flex';
-            void transitionOverlay.offsetWidth; // 强制重绘
+            void transitionOverlay.offsetWidth;
             transitionOverlay.classList.add('animate-slice');
 
-            // 动画进行到一半，显示探索页
             setTimeout(() => {
                 explorePage.classList.add('show');
                 window.scrollTo(0, 0);
             }, 600);
 
-            // 动画结束隐藏黑屏
             setTimeout(() => {
                 transitionOverlay.classList.remove('animate-slice');
                 transitionOverlay.style.display = 'none';
             }, 1200);
         }
 
-        // 关闭探索页，返回主页
         function closeExplore() {
             explorePage.classList.remove('show');
         }
