@@ -74,25 +74,25 @@
         .nav-start-btn:hover .nav-start-cn { text-shadow: 0 0 25px #ffffff, 0 0 40px #6a9eff; transform: scale(1.05); }
         .nav-start-btn:hover .nav-start-en { color: #ffffff; text-shadow: 0 0 10px #aaccff; }
 
-        /* 右侧波浪菜单区 */
+        /* 右侧波浪菜单区 (只剩5个) */
         .nav-links { display: flex; align-items: flex-start; gap: 8px; height: 90px; position: relative; }
         .nav-item { position: relative; text-decoration: none; display: flex; justify-content: center; align-items: center; padding: 10px 12px; transition: all 0.3s ease; transform: translateY(0); cursor: pointer; }
         .nav-text { font-size: 1.05rem; font-weight: 600; color: #a4b0e0; letter-spacing: 1px; transition: all 0.3s ease; z-index: 2; }
         
         .nav-item::after { content: ''; position: absolute; width: 1px; background: rgba(255, 255, 255, 0.4); box-shadow: 0 0 8px rgba(164, 176, 224, 0.6); transition: all 0.3s ease; z-index: 1; }
         
+        /* 重新分配5个菜单的高低和线条 */
         .wave-1::after { left: -5px; top: 20px; height: 50px; } 
         .wave-2::after { right: -5px; bottom: 20px; height: 70px; } 
         .wave-3::after { left: -5px; top: 40px; height: 40px; } 
         .wave-4::after { right: -5px; top: 10px; height: 60px; } 
-        .wave-5::after { left: -5px; bottom: 20px; height: 50px; } 
-        .wave-6::after { right: -5px; top: 40px; height: 80px; } 
-        .wave-7::after { left: -5px; top: 10px; height: 60px; }
+        .wave-5::after { left: -5px; bottom: 10px; height: 50px; }
         
-        .wave-1 { transform: translateY(15px); } .wave-2 { transform: translateY(45px); } 
-        .wave-3 { transform: translateY(30px); } .wave-4 { transform: translateY(5px); } 
-        .wave-5 { transform: translateY(50px); } .wave-6 { transform: translateY(15px); } 
-        .wave-7 { transform: translateY(35px); }
+        .wave-1 { transform: translateY(15px); } 
+        .wave-2 { transform: translateY(45px); } 
+        .wave-3 { transform: translateY(30px); } 
+        .wave-4 { transform: translateY(5px); } 
+        .wave-5 { transform: translateY(35px); }
 
         .nav-item:hover .nav-text { color: #ffffff; text-shadow: 0 0 10px #a4b0e0, 0 0 20px #6a9eff; }
         .nav-item:hover::after { background: #ffffff; box-shadow: 0 0 15px #ffffff, 0 0 30px #6a9eff; }
@@ -150,7 +150,7 @@
         .thanks-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
         .thanks-list li { font-size: 0.95rem; color: #6a7baa; }
 
-        /* ========== 探索页 (图2复刻) ========== */
+        /* ========== 探索页 ========== */
         #page-explore {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at center, #1e2a4a 0%, #0a0f24 60%, #020411 100%);
@@ -195,27 +195,16 @@
         @keyframes fadeInOut { 0% { background: rgba(0,0,0,0); } 50% { background: rgba(0,0,0,1); } 100% { background: rgba(0,0,0,1); } }
 
         /* =========================================
-           ⭐️ 返回转场 (彻底修复半路消失) ⭐️
+           ⭐️ 全新返回转场 (极简黑屏渐隐) ⭐️
            ========================================= */
-        #return-overlay {
+        #fade-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 9999; display: none; pointer-events: none; overflow: hidden;
+            background: #000000; z-index: 9999; 
+            display: block; opacity: 0; pointer-events: none;
+            transition: opacity 0.4s ease; /* 渐隐动画时长 */
         }
-        .return-paper {
-            position: absolute; 
-            top: -10%; 
-            right: -200vw; /* 初始隐藏在极右边 */
-            width: 200vw;  /* 增加宽度到 200vw，确保覆盖全屏且能滑出 */
-            height: 120vh;
-            background-color: #2a3552; 
-            box-shadow: -20px 0 50px rgba(0, 0, 0, 0.5);
-            transform: skewX(-20deg) translateX(0); 
-            /* 动画时长改为 0.8s，让扫过屏幕的过程更加完整、优雅 */
-            transition: transform 0.8s cubic-bezier(0.6, 0, 0.4, 1);
-        }
-        .return-paper.active {
-            /* 向左滑动 250vw，绝对能完全扫出左侧屏幕 */
-            transform: skewX(-20deg) translateX(-250vw); 
+        #fade-overlay.show {
+            opacity: 1; pointer-events: auto;
         }
 
         /* 模态框 */
@@ -233,7 +222,7 @@
             .main-container { padding: 10px 15px 40px; }
             .navbar { flex-direction: column; padding: 15px; gap: 10px; }
             .nav-links { height: auto; flex-wrap: wrap; justify-content: center; gap: 10px; }
-            .wave-1, .wave-2, .wave-3, .wave-4, .wave-5, .wave-6, .wave-7 { transform: translateY(0); padding: 5px; }
+            .wave-1, .wave-2, .wave-3, .wave-4, .wave-5 { transform: translateY(0); padding: 5px; }
             .nav-item::after { display: none !important; }
             
             .nav-start-btn { margin: 15px 0; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 15px; width: 100%; }
@@ -251,6 +240,9 @@
     </style>
 </head>
 <body>
+
+    <!-- ⭐️ 隐藏的音效标签 (请确保上传了 start.mp3) ⭐️ -->
+    <audio id="startSound" src="start.mp3" preload="auto"></audio>
 
     <!-- 全局背景与特效 -->
     <div class="starry-bg" id="starryBg"></div>
@@ -275,10 +267,8 @@
                 <a href="javascript:void(0)" class="nav-item wave-1" onclick="switchView('home')"><span class="nav-text">首页</span></a>
                 <a href="javascript:void(0)" class="nav-item wave-2" onclick="switchView('home')"><span class="nav-text">地区</span></a>
                 <a href="javascript:void(0)" class="nav-item wave-3" onclick="switchView('character')"><span class="nav-text">角色</span></a>
-                <a href="javascript:void(0)" class="nav-item wave-4" onclick="switchView('home')"><span class="nav-text">历史</span></a>
-                <a href="story.html" class="nav-item wave-5"><span class="nav-text">剧情</span></a>
-                <a href="javascript:void(0)" class="nav-item wave-6" onclick="switchView('home')"><span class="nav-text">简介</span></a>
-                <a href="javascript:void(0)" class="nav-item wave-7" onclick="switchView('home')"><span class="nav-text">作者</span></a>
+                <a href="story.html" class="nav-item wave-4"><span class="nav-text">剧情</span></a>
+                <a href="javascript:void(0)" class="nav-item wave-5" onclick="switchView('home')"><span class="nav-text">作者</span></a>
             </div>
         </nav>
 
@@ -360,7 +350,6 @@
             </div>
         </div>
 
-        <!-- 返回按钮 -->
         <div class="back-to-home" onclick="closeExplore()">
             ← 返回主页 <span>Back to home</span>
         </div>
@@ -372,10 +361,8 @@
         <div class="slice-line right"></div>
     </div>
 
-    <!-- ⭐️ 返回转场遮罩 ⭐️ -->
-    <div id="return-overlay">
-        <div class="return-paper"></div>
-    </div>
+    <!-- ⭐️ 全新极简黑屏转场遮罩 ⭐️ -->
+    <div id="fade-overlay"></div>
 
     <!-- 角色弹窗 -->
     <div class="modal-overlay" id="modalOverlay">
@@ -453,11 +440,17 @@
         // =========================================
         const transitionOverlay = document.getElementById('transition-overlay');
         const explorePage = document.getElementById('page-explore');
-        const returnOverlay = document.getElementById('return-overlay');
-        const returnPaper = document.querySelector('.return-paper');
+        const fadeOverlay = document.getElementById('fade-overlay');
 
         // 进入探索页 (斜线切割)
         function triggerTransition() {
+            // 播放音效
+            const sound = document.getElementById('startSound');
+            if (sound) {
+                sound.currentTime = 0;
+                sound.play().catch(e => console.log("音频尚未就绪或浏览器拦截了播放"));
+            }
+
             transitionOverlay.style.display = 'flex';
             void transitionOverlay.offsetWidth;
             transitionOverlay.classList.add('animate-slice');
@@ -473,26 +466,22 @@
             }, 1200);
         }
 
-        // ⭐️ 返回主页 (完美扫尾，不再半路消失) ⭐️
+        // ⭐️ 返回主页 (极简黑屏渐隐，绝对不卡 Bug) ⭐️
         function closeExplore() {
-            // 1. 显示折纸遮罩层
-            returnOverlay.style.display = 'block';
-            void returnPaper.offsetWidth; 
-            
-            // 2. 让折纸从右侧滑入
-            returnPaper.classList.add('active');
+            // 1. 黑屏淡入
+            fadeOverlay.classList.add('show');
 
-            // 3. 在折纸正好盖住屏幕中间时（0.4秒），切换页面，让用户看不到主页的出现
+            // 2. 等屏幕彻底变黑（0.4秒后），切换回主页
             setTimeout(() => {
                 explorePage.classList.remove('show');
                 window.scrollTo(0, 0);
-            }, 400);
 
-            // 4. 动画时间为 0.8s，我们延迟到 0.85s 再隐藏遮罩，确保它完全滑出屏幕！
-            setTimeout(() => {
-                returnOverlay.style.display = 'none';
-                returnPaper.classList.remove('active');
-            }, 850); 
+                // 3. 再停顿 100 毫秒，让主页渲染一下，然后黑屏淡出
+                setTimeout(() => {
+                    fadeOverlay.classList.remove('show');
+                }, 100);
+
+            }, 400);
         }
 
 
