@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>万象企划</title>
     <meta name="description" content="在真实的地球上，存放着一个名为「万象卷」的浩瀚异世界。">
-    <meta name="keywords" content="万象企划, TE-Planning, 深空幻境, 原创企划">
-
+    
     <style>
         /* ========== 全局样式 ========== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -19,20 +18,9 @@
             position: relative;
         }
         
-        /* 滚动条美化 */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #020411; }
         ::-webkit-scrollbar-thumb { background: #2a3a6a; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #4a6ab0; }
-
-        /* =========================================
-           页面一：主页 (包含星空、导航、简介、角色、底部)
-           ========================================= */
-        #main-site {
-            transition: opacity 0.5s ease;
-            position: relative;
-            z-index: 10;
-        }
 
         /* 背景层 */
         .starry-bg {
@@ -57,7 +45,7 @@
             position: relative; z-index: 10;
         }
 
-        /* 导航栏 (复用之前的) */
+        /* ========== 导航栏 (新增了开始，共8个项) ========== */
         .navbar {
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(10, 20, 40, 0.65); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
@@ -66,78 +54,64 @@
             border: 1px solid rgba(150, 180, 255, 0.25); position: relative; z-index: 20;
         }
         .logo { display: flex; flex-direction: column; line-height: 1.1; }
-        .logo-cn { font-size: 1.8rem; font-weight: 800; color: #a4b0e0; letter-spacing: 2px; text-shadow: 0 0 15px rgba(100, 150, 255, 0.4); }
+        .logo-cn { font-size: 1.8rem; font-weight: 800; color: #a4b0e0; letter-spacing: 2px; }
         .logo-en { font-size: 1.4rem; font-weight: 700; color: #a4b0e0; letter-spacing: 1px; }
         .logo-sub { font-size: 0.9rem; color: #6a7baa; margin-top: 4px; letter-spacing: 0.5px; }
-        .nav-links { display: flex; align-items: flex-start; gap: 10px; height: 100px; position: relative; }
-        .nav-item { position: relative; text-decoration: none; display: flex; justify-content: center; align-items: center; padding: 10px 15px; transition: all 0.3s ease; transform: translateY(0); }
-        .nav-text { font-size: 1.1rem; font-weight: 600; color: #a4b0e0; letter-spacing: 2px; transition: all 0.3s ease; z-index: 2; }
-        .nav-item::after { content: ''; position: absolute; width: 1px; background: rgba(255, 255, 255, 0.6); box-shadow: 0 0 8px rgba(164, 176, 224, 0.8); transition: all 0.3s ease; z-index: 1; }
-        .wave-1::after { left: -5px; top: 20px; height: 60px; } .wave-2::after { right: -5px; bottom: 20px; height: 80px; } .wave-3::after { left: -5px; top: 50px; height: 40px; } .wave-4::after { right: -5px; top: 10px; height: 70px; } .wave-5::after { left: -5px; bottom: 10px; height: 50px; } .wave-6::after { right: -5px; top: 40px; height: 90px; } .wave-7::after { left: -5px; top: 15px; height: 65px; }
-        .wave-1 { transform: translateY(10px); } .wave-2 { transform: translateY(50px); } .wave-3 { transform: translateY(40px); } .wave-4 { transform: translateY(0px); } .wave-5 { transform: translateY(50px); } .wave-6 { transform: translateY(10px); } .wave-7 { transform: translateY(0px); }
+        
+        .nav-links { display: flex; align-items: flex-start; gap: 5px; height: 100px; position: relative; }
+        .nav-item { position: relative; text-decoration: none; display: flex; justify-content: center; align-items: center; padding: 10px 12px; transition: all 0.3s ease; transform: translateY(0); cursor: pointer; }
+        .nav-text { font-size: 1.05rem; font-weight: 600; color: #a4b0e0; letter-spacing: 1px; transition: all 0.3s ease; z-index: 2; }
+        
+        /* 伪元素竖线 */
+        .nav-item::after { content: ''; position: absolute; width: 1px; background: rgba(255, 255, 255, 0.4); box-shadow: 0 0 8px rgba(164, 176, 224, 0.6); transition: all 0.3s ease; z-index: 1; }
+        
+        /* 重新分配8个菜单项的高低和线条 */
+        .wave-1::after { left: -5px; top: 20px; height: 50px; } 
+        .wave-2::after { right: -5px; bottom: 20px; height: 70px; } 
+        .wave-3::after { left: -5px; top: 40px; height: 40px; } 
+        .wave-4::after { right: -5px; top: 10px; height: 60px; } 
+        .wave-5::after { left: -5px; bottom: 20px; height: 50px; } 
+        .wave-6::after { right: -5px; top: 40px; height: 80px; } 
+        .wave-7::after { left: -5px; top: 10px; height: 60px; }
+        .wave-8::after { right: -5px; bottom: 10px; height: 70px; }
+        
+        .wave-1 { transform: translateY(15px); } 
+        .wave-2 { transform: translateY(45px); } 
+        .wave-3 { transform: translateY(30px); } 
+        .wave-4 { transform: translateY(5px); } 
+        .wave-5 { transform: translateY(50px); } 
+        .wave-6 { transform: translateY(15px); } 
+        .wave-7 { transform: translateY(35px); }
+        .wave-8 { transform: translateY(0px); }
+
         .nav-item:hover .nav-text { color: #ffffff; text-shadow: 0 0 10px #a4b0e0, 0 0 20px #6a9eff; }
         .nav-item:hover::after { background: #ffffff; box-shadow: 0 0 15px #ffffff, 0 0 30px #6a9eff; }
 
-        /* ⭐️ 全新：巨大的 START 入口 (参考图1) ⭐️ */
-        .start-hero {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 400px; /* 占据屏幕极大的视觉重心 */
-            margin-bottom: 50px;
-            position: relative;
-            cursor: pointer;
-            group: hover; /* 用于触发内部元素动画 */
-        }
-        .start-hero-content {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            position: relative;
-            transition: transform 0.4s ease;
-        }
-        .start-hero:hover .start-hero-content {
-            transform: scale(1.05);
-        }
-        /* 斜线 */
-        .start-line {
-            width: 2px;
-            height: 280px;
-            background: #ffffff;
-            transform: rotate(35deg);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
-            transition: all 0.4s ease;
-        }
-        .start-hero:hover .start-line {
-            box-shadow: 0 0 30px #ffffff, 0 0 50px #6a9eff;
-            height: 300px;
-        }
-        /* 文字 */
-        .start-text-cn {
-            font-size: 6rem;
-            font-weight: 800;
-            color: transparent;
-            -webkit-text-stroke: 2px #ffffff;
-            letter-spacing: 5px;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-        }
-        .start-text-en {
-            font-size: 5.5rem;
-            font-weight: 800;
-            color: transparent;
-            -webkit-text-stroke: 2px #ffffff;
-            letter-spacing: 5px;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-        }
+        /* ========== 视图容器 ========== */
+        .view-container { display: none; animation: fadeIn 0.5s ease forwards; }
+        .view-container.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 简介、角色卡、底部的样式 (保持之前的) */
-        .worldview-section { background: rgba(15, 25, 45, 0.7); backdrop-filter: blur(12px); border-radius: 50px; padding: 40px 50px; margin-bottom: 70px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7); border: 1px solid rgba(150, 180, 255, 0.2); position: relative; }
+        /* ========== 简介区块 ========== */
+        .worldview-section { background: rgba(15, 25, 45, 0.7); backdrop-filter: blur(12px); border-radius: 50px; padding: 40px 50px; margin-bottom: 40px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7); border: 1px solid rgba(150, 180, 255, 0.2); position: relative; }
         .worldview-section::before { content: "✨"; position: absolute; top: -20px; left: 40px; font-size: 3rem; opacity: 0.6; text-shadow: 0 0 20px #aaccff; }
         .worldview-title { font-size: 2.2rem; color: #d0e0ff; margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
         .worldview-title span { background: rgba(40, 60, 110, 0.7); padding: 4px 18px; border-radius: 40px; font-size: 1rem; color: #b0c8ff; border: 1px solid rgba(150, 180, 255, 0.3); }
         .worldview-text { font-size: 1.2rem; line-height: 1.9; color: #c8d4f0; text-indent: 2em; background: rgba(10, 20, 45, 0.5); padding: 20px 30px; border-radius: 30px; border-left: 8px solid #6a9eff; }
-        
+
+        /* ⭐️ 挪到简介下面的 START 入口 ⭐️ */
+        .start-hero {
+            display: flex; justify-content: center; align-items: center;
+            height: 300px; margin-bottom: 50px; position: relative; cursor: pointer;
+        }
+        .start-hero-content { display: flex; align-items: center; justify-content: center; gap: 20px; transition: transform 0.4s ease; }
+        .start-hero:hover .start-hero-content { transform: scale(1.05); }
+        .start-line { width: 2px; height: 200px; background: #ffffff; transform: rotate(35deg); box-shadow: 0 0 15px rgba(255, 255, 255, 0.8); transition: all 0.4s ease; }
+        .start-hero:hover .start-line { box-shadow: 0 0 30px #ffffff, 0 0 50px #6a9eff; height: 220px; }
+        .start-text-cn { font-size: 5rem; font-weight: 800; color: transparent; -webkit-text-stroke: 2px #ffffff; letter-spacing: 5px; text-shadow: 0 0 20px rgba(255, 255, 255, 0.2); }
+        .start-text-en { font-size: 4.5rem; font-weight: 800; color: transparent; -webkit-text-stroke: 2px #ffffff; letter-spacing: 5px; text-shadow: 0 0 20px rgba(255, 255, 255, 0.2); }
+
+        /* ========== 角色图鉴区块 ========== */
         .gallery-section { margin-top: 20px; }
         .section-header { display: flex; align-items: center; gap: 20px; margin-bottom: 40px; }
         .section-header h2 { font-size: 2.4rem; background: linear-gradient(135deg, #aaccff, #ffffff); -webkit-background-clip: text; color: transparent; font-weight: 800; letter-spacing: 3px; }
@@ -150,8 +124,9 @@
         .character-desc { font-size: 0.95rem; color: #a8b8d8; margin-bottom: 18px; }
         .detail-btn { background: linear-gradient(145deg, #3a5a9a, #2a3a6a); border: 1px solid rgba(150, 190, 255, 0.4); color: #e0ecff; padding: 12px 30px; border-radius: 40px; cursor: pointer; transition: all 0.3s; }
         .detail-btn:hover { background: linear-gradient(145deg, #4a6ab0, #3a4a8a); transform: scale(1.04); }
-        
-        .footer-section { margin-top: 100px; padding-bottom: 50px; }
+
+        /* ========== 底部信息区块 ========== */
+        .footer-section { margin-top: 80px; padding-bottom: 50px; }
         .footer-divider { display: flex; align-items: center; text-align: center; color: #c8d4f0; font-size: 1rem; margin-bottom: 50px; }
         .footer-divider::before, .footer-divider::after { content: ''; flex: 1; border-bottom: 1px dashed rgba(150, 180, 255, 0.3); }
         .footer-divider::before { margin-right: 20px; } .footer-divider::after { margin-left: 20px; }
@@ -168,6 +143,51 @@
         .thanks-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
         .thanks-list li { font-size: 0.95rem; color: #6a7baa; }
 
+        /* ========== 探索页 (图2复刻) ========== */
+        #page-explore {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #1e2a4a 0%, #0a0f24 60%, #020411 100%);
+            z-index: 100; /* 覆盖主页但低于转场层 */
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.8s ease; overflow: hidden;
+        }
+        #page-explore.show { display: flex; opacity: 1; }
+        .explore-header { text-align: center; margin-bottom: 60px; font-family: 'Georgia', serif; }
+        .explore-header h1 { font-size: 1.8rem; font-style: italic; color: #b5c1ec; font-weight: 400; margin-bottom: 15px; }
+        .explore-header h2 { font-size: 1.6rem; color: #c8d4f0; font-weight: 600; letter-spacing: 5px; }
+        .explore-options { display: flex; flex-direction: column; gap: 80px; text-align: center; }
+        .explore-item { text-decoration: none; cursor: pointer; transition: all 0.4s ease; display: flex; flex-direction: column; align-items: center; }
+        .explore-item:hover { transform: scale(1.1); }
+        .explore-cn { font-size: 2.2rem; color: #e0e8ff; font-weight: 700; letter-spacing: 8px; margin-bottom: 10px; transition: 0.4s; }
+        .explore-item:hover .explore-cn { color: #ffffff; text-shadow: 0 0 25px #ffffff, 0 0 40px #6a9eff; }
+        .explore-en { font-family: 'Georgia', serif; font-size: 1.6rem; font-style: italic; color: #94a3b8; transition: 0.4s; }
+        .explore-item:hover .explore-en { color: #aaccff; }
+        
+        /* 返回按钮 (加了英文) */
+        .back-to-home {
+            position: absolute; bottom: 40px; color: #6a7baa; font-size: 1.05rem;
+            letter-spacing: 2px; transition: 0.3s; cursor: pointer;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .back-to-home:hover { color: #ffffff; text-shadow: 0 0 15px #aaccff; }
+        .back-to-home span { font-family: 'Georgia', serif; font-style: italic; font-size: 1.1rem; opacity: 0.7; }
+
+        /* ========== 转场动画 (线条切割) ========== */
+        #transition-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000000; z-index: 9999; display: none;
+            justify-content: center; align-items: center; overflow: hidden;
+        }
+        .slice-line { position: absolute; width: 2px; height: 150vh; background: #ffffff; box-shadow: 0 0 20px #ffffff, 0 0 50px #6a9eff; transform-origin: center; }
+        .slice-line.left { transform: rotate(35deg) translateX(-100vw); }
+        .slice-line.right { transform: rotate(35deg) translateX(100vw); }
+        .animate-slice .slice-line.left { animation: sliceLeft 1.2s cubic-bezier(0.8, 0, 0.2, 1) forwards; }
+        .animate-slice .slice-line.right { animation: sliceRight 1.2s cubic-bezier(0.8, 0, 0.2, 1) forwards; }
+        @keyframes sliceLeft { 0% { transform: rotate(35deg) translateX(-100vw); } 50% { transform: rotate(35deg) translateX(0); opacity: 1; } 100% { transform: rotate(35deg) translateX(-100vw); opacity: 0; } }
+        @keyframes sliceRight { 0% { transform: rotate(35deg) translateX(100vw); } 50% { transform: rotate(35deg) translateX(0); opacity: 1; } 100% { transform: rotate(35deg) translateX(100vw); opacity: 0; } }
+        .animate-slice { animation: fadeInOut 1.2s ease-in-out forwards; }
+        @keyframes fadeInOut { 0% { background: rgba(0,0,0,0); } 50% { background: rgba(0,0,0,1); } 100% { background: rgba(0,0,0,1); } }
+
         /* 模态框 */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 5, 15, 0.75); backdrop-filter: blur(12px); display: flex; justify-content: center; align-items: center; visibility: hidden; opacity: 0; transition: 0.3s; z-index: 2000; }
         .modal-overlay.active { visibility: visible; opacity: 1; }
@@ -178,209 +198,68 @@
         .modal-name { font-size: 2.3rem; font-weight: 800; color: #b0d0ff; margin-bottom: 12px; }
         .modal-story { font-size: 1.1rem; line-height: 1.8; color: #c8d8f0; background: rgba(10, 18, 35, 0.8); padding: 25px; border-radius: 40px; text-align: left; border-left: 6px solid #6a9eff; max-height: 280px; overflow-y: auto; }
 
-        /* =========================================
-           转场动画遮罩 (线条切割效果)
-           ========================================= */
-        #transition-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000000;
-            z-index: 9999;
-            display: none;
-            justify-content: center; align-items: center;
-            overflow: hidden;
-        }
-        /* 两条交叉的白线 */
-        .slice-line {
-            position: absolute;
-            width: 2px;
-            height: 150vh; /* 保证足够长 */
-            background: #ffffff;
-            box-shadow: 0 0 20px #ffffff, 0 0 50px #6a9eff;
-            transform-origin: center;
-        }
-        .slice-line.left { transform: rotate(35deg) translateX(-100vw); }
-        .slice-line.right { transform: rotate(35deg) translateX(100vw); }
-
-        /* 动画类 */
-        .animate-slice .slice-line.left {
-            animation: sliceLeft 1.2s cubic-bezier(0.8, 0, 0.2, 1) forwards;
-        }
-        .animate-slice .slice-line.right {
-            animation: sliceRight 1.2s cubic-bezier(0.8, 0, 0.2, 1) forwards;
-        }
-        @keyframes sliceLeft {
-            0% { transform: rotate(35deg) translateX(-100vw); }
-            50% { transform: rotate(35deg) translateX(0); opacity: 1; }
-            100% { transform: rotate(35deg) translateX(-100vw); opacity: 0; }
-        }
-        @keyframes sliceRight {
-            0% { transform: rotate(35deg) translateX(100vw); }
-            50% { transform: rotate(35deg) translateX(0); opacity: 1; }
-            100% { transform: rotate(35deg) translateX(100vw); opacity: 0; }
-        }
-        /* 黑色遮罩渐显 */
-        .animate-slice { animation: fadeInOut 1.2s ease-in-out forwards; }
-        @keyframes fadeInOut {
-            0% { background: rgba(0,0,0,0); }
-            50% { background: rgba(0,0,0,1); }
-            100% { background: rgba(0,0,0,1); } /* 动画结束后保持黑屏，给下面页面切换用 */
-        }
-
-        /* =========================================
-           页面二：探索选择页 (参考图2)
-           ========================================= */
-        #explore-page {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #1e2a4a 0%, #0a0f24 60%, #020411 100%);
-            z-index: 9998; /* 在转场层下面一点点 */
-            display: none; /* 默认隐藏 */
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 1s ease;
-        }
-        #explore-page.show {
-            display: flex;
-            opacity: 1;
-        }
-
-        /* 标题区 */
-        .explore-header {
-            text-align: center;
-            margin-bottom: 60px;
-            font-family: 'Georgia', 'Times New Roman', serif; /* 衬线字体，高级感 */
-        }
-        .explore-header h1 {
-            font-size: 1.8rem;
-            font-style: italic;
-            color: #b5c1ec;
-            font-weight: 400;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-        }
-        .explore-header h2 {
-            font-size: 1.6rem;
-            color: #c8d4f0;
-            font-weight: 600;
-            letter-spacing: 5px;
-            text-shadow: 0 0 20px rgba(100, 150, 255, 0.4);
-        }
-
-        /* 选项容器 */
-        .explore-options {
-            display: flex;
-            flex-direction: column;
-            gap: 80px;
-            text-align: center;
-        }
-
-        /* 单个选项 */
-        .explore-item {
-            text-decoration: none;
-            color: inherit;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .explore-item:hover {
-            transform: scale(1.1); /* 悬浮放大 */
-        }
-        .explore-cn {
-            font-size: 2.2rem;
-            color: #e0e8ff;
-            font-weight: 700;
-            letter-spacing: 8px;
-            margin-bottom: 10px;
-            transition: all 0.4s ease;
-            text-shadow: 0 0 15px rgba(164, 176, 224, 0.2);
-        }
-        .explore-item:hover .explore-cn {
-            color: #ffffff;
-            text-shadow: 0 0 25px #ffffff, 0 0 40px #6a9eff;
-        }
-        .explore-en {
-            font-family: 'Georgia', serif;
-            font-size: 1.6rem;
-            font-style: italic;
-            color: #94a3b8;
-            letter-spacing: 2px;
-            transition: all 0.4s ease;
-        }
-        .explore-item:hover .explore-en {
-            color: #aaccff;
-        }
-
-        /* 返回主页按钮 (图2里没有，但我给你加一个隐藏的快捷键，方便测试) */
-        .back-to-home {
-            position: absolute;
-            bottom: 40px;
-            color: #6a7baa;
-            text-decoration: none;
-            font-size: 1rem;
-            letter-spacing: 2px;
-            transition: 0.3s;
-            cursor: pointer;
-        }
-        .back-to-home:hover {
-            color: #ffffff;
-            text-shadow: 0 0 10px #aaccff;
-        }
-
-        /* ========== 响应式调整 ========== */
+        /* ========== 手机端适配 ========== */
         @media (max-width: 768px) {
             .main-container { padding: 10px 15px 40px; }
             .navbar { flex-direction: column; padding: 15px; gap: 15px; }
-            .nav-links { height: auto; flex-wrap: wrap; justify-content: center; gap: 15px; }
-            .wave-1, .wave-2, .wave-3, .wave-4, .wave-5, .wave-6, .wave-7 { transform: translateY(0); padding: 5px; }
+            .nav-links { height: auto; flex-wrap: wrap; justify-content: center; gap: 10px; }
+            .wave-1, .wave-2, .wave-3, .wave-4, .wave-5, .wave-6, .wave-7, .wave-8 { transform: translateY(0); padding: 5px; }
             .nav-item::after { display: none !important; }
             
-            .start-hero { height: 250px; }
-            .start-text-cn { font-size: 3.5rem; }
-            .start-text-en { font-size: 3rem; }
-            .start-line { height: 150px; }
+            .start-hero { height: 200px; margin-bottom: 30px; }
+            .start-text-cn { font-size: 3rem; }
+            .start-text-en { font-size: 2.5rem; }
+            .start-line { height: 120px; }
 
             .footer-content { grid-template-columns: 1fr; gap: 30px; text-align: center; }
             .social-links { align-items: center; }
-
             .explore-cn { font-size: 1.8rem; letter-spacing: 4px; }
-            .explore-en { font-size: 1.2rem; }
             .explore-options { gap: 50px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- =========================================
-         页面一：主页内容区
-         ========================================= -->
-    <div id="main-site">
-        <div class="starry-bg" id="starryBg"></div>
-        <div class="bg-fade-overlay" id="bgFadeOverlay"></div>
-        <canvas id="sakuraCanvas"></canvas>
+    <!-- 全局背景与特效 -->
+    <div class="starry-bg" id="starryBg"></div>
+    <div class="bg-fade-overlay" id="bgFadeOverlay"></div>
+    <canvas id="sakuraCanvas"></canvas>
 
-        <div class="main-container">
-            <nav class="navbar">
-                <div class="logo">
-                    <div class="logo-cn">万象企划</div>
-                    <div class="logo-en">TE-Planning</div>
-                    <div class="logo-sub">Omni-Planning</div>
-                </div>
-                <div class="nav-links">
-                    <a href="#" class="nav-item wave-1"><span class="nav-text">首页</span></a>
-                    <a href="#worldview" class="nav-item wave-2"><span class="nav-text">地区</span></a>
-                    <a href="#gallery" class="nav-item wave-3"><span class="nav-text">角色</span></a>
-                    <a href="#worldview" class="nav-item wave-4"><span class="nav-text">历史</span></a>
-                    <a href="story.html" class="nav-item wave-5"><span class="nav-text">剧情</span></a>
-                    <a href="#worldview" class="nav-item wave-6"><span class="nav-text">简介</span></a>
-                    <a href="#about" class="nav-item wave-7"><span class="nav-text">作者</span></a>
-                </div>
-            </nav>
+    <div class="main-container">
+        <!-- ================= 导航栏 ================= -->
+        <nav class="navbar">
+            <div class="logo">
+                <div class="logo-cn">万象企划</div>
+                <div class="logo-en">TE-Planning</div>
+                <div class="logo-sub">Omni-Planning</div>
+            </div>
+            <div class="nav-links">
+                <!-- 新增的“开始”按钮，点击触发转场 -->
+                <a href="javascript:void(0)" class="nav-item wave-1" onclick="triggerTransition()"><span class="nav-text">开始</span></a>
+                
+                <!-- 导航跳转逻辑 -->
+                <a href="javascript:void(0)" class="nav-item wave-2" onclick="switchView('home')"><span class="nav-text">首页</span></a>
+                <a href="javascript:void(0)" class="nav-item wave-3" onclick="switchView('home')"><span class="nav-text">地区</span></a>
+                <a href="javascript:void(0)" class="nav-item wave-4" onclick="switchView('character')"><span class="nav-text">角色</span></a>
+                <a href="javascript:void(0)" class="nav-item wave-5" onclick="switchView('home')"><span class="nav-text">历史</span></a>
+                <a href="story.html" class="nav-item wave-6"><span class="nav-text">剧情</span></a>
+                <a href="javascript:void(0)" class="nav-item wave-7" onclick="switchView('home')"><span class="nav-text">简介</span></a>
+                <a href="javascript:void(0)" class="nav-item wave-8" onclick="switchView('home')"><span class="nav-text">作者</span></a>
+            </div>
+        </nav>
 
-            <!-- ⭐️ 巨型 START 入口 ⭐️ -->
-            <div class="start-hero" id="startBtn">
+        <!-- ================= 视图1：主界面 (简介 + 开始 + 作者) ================= -->
+        <div id="view-home" class="view-container active">
+            
+            <section class="worldview-section">
+                <div class="worldview-title">✨ 简介 <span>序章</span></div>
+                <div class="worldview-text">
+                    在真实的地球上，存放着一个名为「万象卷」的浩瀚异世界。前所未有的全新世界就此展开。
+                </div>
+            </section>
+
+            <!-- 挪到简介下面的 START -->
+            <div class="start-hero" onclick="triggerTransition()">
                 <div class="start-hero-content">
                     <div class="start-text-cn">开始</div>
                     <div class="start-line"></div>
@@ -388,25 +267,8 @@
                 </div>
             </div>
 
-            <section id="worldview" class="worldview-section">
-                <div class="worldview-title">✨ 简介 <span>序章</span></div>
-                <div class="worldview-text">
-                    在真实的地球上，存放着一个名为「万象卷」的浩瀚异世界。前所未有的全新世界就此展开。
-                </div>
-            </section>
-
-            <section id="gallery" class="gallery-section">
-                <div class="section-header">
-                    <h2>✦ 角色图鉴 ✦</h2>
-                    <div class="badge">✨ 共 <span id="characterCount">3</span> 位角色 ✨</div>
-                </div>
-                <div class="character-grid" id="characterGrid"></div>
-            </section>
-
-            <footer id="about" class="footer-section">
-                <div class="footer-divider">
-                    ✨ 关于作者 | 一个热爱星辰与代码的幻想编织者 ✨
-                </div>
+            <footer class="footer-section">
+                <div class="footer-divider">✨ 关于作者 | 一个热爱星辰与代码的幻想编织者 ✨</div>
                 <div class="footer-content">
                     <div class="footer-col">
                         <h3>About us</h3>
@@ -435,44 +297,51 @@
                 </div>
             </footer>
         </div>
+
+        <!-- ================= 视图2：角色图鉴 (独立页面) ================= -->
+        <div id="view-character" class="view-container">
+            <section class="gallery-section" style="margin-top: 40px;">
+                <div class="section-header">
+                    <h2>✦ 角色图鉴 ✦</h2>
+                    <div class="badge">✨ 共 <span id="characterCount">3</span> 位角色 ✨</div>
+                </div>
+                <!-- 角色卡片会被JS渲染在这里 -->
+                <div class="character-grid" id="characterGrid"></div>
+            </section>
+        </div>
     </div>
 
-    <!-- =========================================
-         转场动画黑屏遮罩
-         ========================================= -->
-    <div id="transition-overlay">
-        <div class="slice-line left"></div>
-        <div class="slice-line right"></div>
-    </div>
-
-    <!-- =========================================
-         页面二：探索选择页 (图2复刻)
-         ========================================= -->
-    <div id="explore-page">
+    <!-- ================= 视图3：探索页 (全屏覆盖) ================= -->
+    <div id="page-explore">
         <div class="explore-header">
             <h1>What would you like to explore?</h1>
             <h2>您想了解什么？</h2>
         </div>
 
         <div class="explore-options">
-            <!-- 选项1 -->
             <div class="explore-item" onclick="alert('这里之后可以跳转到对应的页面！')">
                 <div class="explore-cn">企划</div>
                 <div class="explore-en">project</div>
             </div>
-            
-            <!-- 选项2 -->
             <div class="explore-item" onclick="alert('这里之后可以跳转到对应的页面！')">
                 <div class="explore-cn">小说与世界观</div>
                 <div class="explore-en">stories and worldbuilding</div>
             </div>
         </div>
 
-        <!-- 隐藏的返回按钮 -->
-        <div class="back-to-home" id="backBtn">← 返回主页</div>
+        <!-- 返回主页，加上了英文 -->
+        <div class="back-to-home" onclick="closeExplore()">
+            ← 返回主页 <span>Back to home</span>
+        </div>
     </div>
 
-    <!-- 角色弹窗 (保持原样) -->
+    <!-- 转场动画遮罩 -->
+    <div id="transition-overlay">
+        <div class="slice-line left"></div>
+        <div class="slice-line right"></div>
+    </div>
+
+    <!-- 角色弹窗 -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-content">
             <button class="modal-close" id="modalCloseBtn">&times;</button>
@@ -484,7 +353,7 @@
 
     <script>
         // =========================================
-        // 1. 角色数据与渲染逻辑
+        // 1. 角色数据渲染
         // =========================================
         const characterData = [
             { name: "星野", image: "oc_pic1.png", desc: "喜欢收集星光的少女。", story: "星野是深空幻境中最年轻的星语者，她能与熄灭的星辰对话。她的背包里装满了来自不同星系的小星星，每一颗都藏着一个故事。" },
@@ -511,7 +380,7 @@
         }
         renderCards();
 
-        // 模态框逻辑
+        // 模态框
         const modalOverlay = document.getElementById('modalOverlay');
         const modalCloseBtn = document.getElementById('modalCloseBtn');
         const modalAvatar = document.getElementById('modalAvatar');
@@ -528,8 +397,59 @@
         modalCloseBtn.addEventListener('click', closeModal);
         modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
 
+
         // =========================================
-        // 2. 星空背景滚动过渡
+        // 2. 核心逻辑：视图切换系统 (主页 <-> 角色页)
+        // =========================================
+        function switchView(viewName) {
+            // 隐藏所有视图
+            document.querySelectorAll('.view-container').forEach(el => el.classList.remove('active'));
+            
+            // 显示对应的视图
+            if (viewName === 'home') {
+                document.getElementById('view-home').classList.add('active');
+            } else if (viewName === 'character') {
+                document.getElementById('view-character').classList.add('active');
+            }
+            
+            // 顺滑滚动到顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+
+        // =========================================
+        // 3. 转场动画与探索页逻辑
+        // =========================================
+        const transitionOverlay = document.getElementById('transition-overlay');
+        const explorePage = document.getElementById('page-explore');
+
+        // 触发转场（点击“开始”）
+        function triggerTransition() {
+            transitionOverlay.style.display = 'flex';
+            void transitionOverlay.offsetWidth; // 强制重绘
+            transitionOverlay.classList.add('animate-slice');
+
+            // 动画进行到一半，显示探索页
+            setTimeout(() => {
+                explorePage.classList.add('show');
+                window.scrollTo(0, 0);
+            }, 600);
+
+            // 动画结束隐藏黑屏
+            setTimeout(() => {
+                transitionOverlay.classList.remove('animate-slice');
+                transitionOverlay.style.display = 'none';
+            }, 1200);
+        }
+
+        // 关闭探索页，返回主页
+        function closeExplore() {
+            explorePage.classList.remove('show');
+        }
+
+
+        // =========================================
+        // 4. 背景与星空特效
         // =========================================
         const starryBg = document.getElementById('starryBg');
         const bgFadeOverlay = document.getElementById('bgFadeOverlay');
@@ -538,9 +458,6 @@
             starryBg.style.opacity = 1 - progress; bgFadeOverlay.style.opacity = progress * 0.9;
         });
 
-        // =========================================
-        // 3. 四角星飘落特效
-        // =========================================
         (function starAnimation() {
             const canvas = document.getElementById('sakuraCanvas'); 
             const ctx = canvas.getContext('2d');
@@ -551,8 +468,7 @@
             class Star {
                 constructor() { this.reset(true); }
                 reset(randomY = false) {
-                    this.x = Math.random() * canvas.width; 
-                    this.y = randomY ? Math.random() * canvas.height : -30 - Math.random() * 100;
+                    this.x = Math.random() * canvas.width; this.y = randomY ? Math.random() * canvas.height : -30 - Math.random() * 100;
                     this.size = Math.random() * 4 + 2; 
                     this.speedY = Math.random() * 0.8 + 0.3; this.speedX = (Math.random() - 0.5) * 0.5;
                     this.rotation = Math.random() * Math.PI * 2; this.rotateSpeed = (Math.random() - 0.5) * 0.03;
@@ -582,46 +498,6 @@
             function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); stars.forEach(star => { star.update(); star.draw(ctx); }); requestAnimationFrame(animate); }
             initStars(); animate(); window.addEventListener('resize', () => initStars());
         })();
-
-        // =========================================
-        // 4. 页面切换与转场动画逻辑 ⭐️核心⭐️
-        // =========================================
-        const startBtn = document.getElementById('startBtn');
-        const transitionOverlay = document.getElementById('transition-overlay');
-        const mainSite = document.getElementById('main-site');
-        const explorePage = document.getElementById('explore-page');
-        const backBtn = document.getElementById('backBtn');
-
-        // 点击【开始】按钮
-        startBtn.addEventListener('click', () => {
-            // 1. 显示黑屏和线条
-            transitionOverlay.style.display = 'flex';
-            // 强制重绘一下，让动画能重新触发
-            void transitionOverlay.offsetWidth;
-            // 2. 添加动画类
-            transitionOverlay.classList.add('animate-slice');
-
-            // 3. 在动画进行到一半（画面最黑的时候），切换页面内容
-            setTimeout(() => {
-                mainSite.style.display = 'none'; // 隐藏主页
-                explorePage.classList.add('show'); // 显示探索页
-                
-                // 恢复滚动条位置到顶部
-                window.scrollTo(0, 0);
-            }, 600); // 600ms 是动画的一半时长
-
-            // 4. 动画结束后，隐藏转场黑屏
-            setTimeout(() => {
-                transitionOverlay.classList.remove('animate-slice');
-                transitionOverlay.style.display = 'none';
-            }, 1200);
-        });
-
-        // 点击【返回主页】（你可以在探索页按返回）
-        backBtn.addEventListener('click', () => {
-            explorePage.classList.remove('show');
-            mainSite.style.display = 'block';
-        });
     </script>
 </body>
 </html>
