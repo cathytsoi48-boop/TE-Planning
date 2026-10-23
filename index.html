@@ -195,7 +195,7 @@
         @keyframes fadeInOut { 0% { background: rgba(0,0,0,0); } 50% { background: rgba(0,0,0,1); } 100% { background: rgba(0,0,0,1); } }
 
         /* =========================================
-           ⭐️ 返回转场 (深色版丝滑扫屏，彻底消灭 Bug) ⭐️
+           ⭐️ 返回转场 (彻底修复半路消失) ⭐️
            ========================================= */
         #return-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -204,19 +204,18 @@
         .return-paper {
             position: absolute; 
             top: -10%; 
-            right: -150vw; /* 藏在屏幕右侧极远处 */
-            width: 150vw;  /* 超级宽，保证绝对覆盖 */
+            right: -200vw; /* 初始隐藏在极右边 */
+            width: 200vw;  /* 增加宽度到 200vw，确保覆盖全屏且能滑出 */
             height: 120vh;
-            /* 调深颜色，不刺眼 */
             background-color: #2a3552; 
             box-shadow: -20px 0 50px rgba(0, 0, 0, 0.5);
-            /* 使用变形代替 clip-path，避免手机浏览器出渲染 Bug */
             transform: skewX(-20deg) translateX(0); 
-            transition: transform 0.6s cubic-bezier(0.7, 0, 0.3, 1);
+            /* 动画时长改为 0.8s，让扫过屏幕的过程更加完整、优雅 */
+            transition: transform 0.8s cubic-bezier(0.6, 0, 0.4, 1);
         }
         .return-paper.active {
-            /* 从右向左扫过屏幕 */
-            transform: skewX(-20deg) translateX(-180vw); 
+            /* 向左滑动 250vw，绝对能完全扫出左侧屏幕 */
+            transform: skewX(-20deg) translateX(-250vw); 
         }
 
         /* 模态框 */
@@ -373,7 +372,7 @@
         <div class="slice-line right"></div>
     </div>
 
-    <!-- ⭐️ 返回转场遮罩 (深色版) ⭐️ -->
+    <!-- ⭐️ 返回转场遮罩 ⭐️ -->
     <div id="return-overlay">
         <div class="return-paper"></div>
     </div>
@@ -474,26 +473,26 @@
             }, 1200);
         }
 
-        // 返回主页 (深色折纸飞入扫屏)
+        // ⭐️ 返回主页 (完美扫尾，不再半路消失) ⭐️
         function closeExplore() {
             // 1. 显示折纸遮罩层
             returnOverlay.style.display = 'block';
-            void returnPaper.offsetWidth; // 强制重绘，确保动画能触发
+            void returnPaper.offsetWidth; 
             
             // 2. 让折纸从右侧滑入
             returnPaper.classList.add('active');
 
-            // 3. 在折纸正好盖住屏幕的时候（0.4秒），切换页面
+            // 3. 在折纸正好盖住屏幕中间时（0.4秒），切换页面，让用户看不到主页的出现
             setTimeout(() => {
                 explorePage.classList.remove('show');
                 window.scrollTo(0, 0);
             }, 400);
 
-            // 4. 动画完全结束后（0.6秒），隐藏遮罩层并重置状态
+            // 4. 动画时间为 0.8s，我们延迟到 0.85s 再隐藏遮罩，确保它完全滑出屏幕！
             setTimeout(() => {
                 returnOverlay.style.display = 'none';
                 returnPaper.classList.remove('active');
-            }, 600);
+            }, 850); 
         }
 
 
