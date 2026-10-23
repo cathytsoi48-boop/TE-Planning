@@ -49,7 +49,7 @@
         .navbar {
             display: flex; justify-content: space-between; align-items: center;
             background: rgba(10, 20, 40, 0.65); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-            border-radius: 20px; padding: 15px 40px; margin: 20px 0 40px; /* 稍微减小上下 padding 让整体更紧凑 */
+            border-radius: 20px; padding: 15px 40px; margin: 20px 0 40px; 
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), 0 0 30px rgba(100, 150, 255, 0.15);
             border: 1px solid rgba(150, 180, 255, 0.25); position: relative; z-index: 20;
         }
@@ -58,53 +58,29 @@
         .logo-en { font-size: 1.4rem; font-weight: 700; color: #a4b0e0; letter-spacing: 1px; }
         .logo-sub { font-size: 0.9rem; color: #6a7baa; margin-top: 4px; letter-spacing: 0.5px; }
         
-        /* ⭐️ 独立出来的居中“开始”按钮 ⭐️ */
+        /* 居中“开始”按钮 */
         .nav-start-btn {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            cursor: pointer;
-            margin: 0 30px; /* 距离左右拉开一点空间 */
-            transition: all 0.3s ease;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-decoration: none; cursor: pointer; margin: 0 30px; transition: all 0.3s ease;
         }
         .nav-start-cn {
-            font-size: 2rem; /* 大字 */
-            font-weight: 800;
-            color: #ffffff;
-            letter-spacing: 5px;
-            text-shadow: 0 0 15px #6a9eff;
-            transition: all 0.3s ease;
-            line-height: 1.1;
+            font-size: 2rem; font-weight: 800; color: #ffffff; letter-spacing: 5px;
+            text-shadow: 0 0 15px #6a9eff; transition: all 0.3s ease; line-height: 1.1;
         }
         .nav-start-en {
-            font-family: 'Georgia', serif;
-            font-style: italic;
-            font-size: 1.1rem;
-            color: #a4b0e0;
-            letter-spacing: 4px;
-            margin-top: 2px;
-            transition: all 0.3s ease;
+            font-family: 'Georgia', serif; font-style: italic; font-size: 1.1rem;
+            color: #a4b0e0; letter-spacing: 4px; margin-top: 2px; transition: all 0.3s ease;
         }
-        .nav-start-btn:hover .nav-start-cn {
-            text-shadow: 0 0 25px #ffffff, 0 0 40px #6a9eff;
-            transform: scale(1.05);
-        }
-        .nav-start-btn:hover .nav-start-en {
-            color: #ffffff;
-            text-shadow: 0 0 10px #aaccff;
-        }
+        .nav-start-btn:hover .nav-start-cn { text-shadow: 0 0 25px #ffffff, 0 0 40px #6a9eff; transform: scale(1.05); }
+        .nav-start-btn:hover .nav-start-en { color: #ffffff; text-shadow: 0 0 10px #aaccff; }
 
         /* 右侧波浪菜单区 */
         .nav-links { display: flex; align-items: flex-start; gap: 8px; height: 90px; position: relative; }
         .nav-item { position: relative; text-decoration: none; display: flex; justify-content: center; align-items: center; padding: 10px 12px; transition: all 0.3s ease; transform: translateY(0); cursor: pointer; }
         .nav-text { font-size: 1.05rem; font-weight: 600; color: #a4b0e0; letter-spacing: 1px; transition: all 0.3s ease; z-index: 2; }
         
-        /* 伪元素竖线 */
         .nav-item::after { content: ''; position: absolute; width: 1px; background: rgba(255, 255, 255, 0.4); box-shadow: 0 0 8px rgba(164, 176, 224, 0.6); transition: all 0.3s ease; z-index: 1; }
         
-        /* 重新分配剩下7个菜单项的高低和线条 */
         .wave-1::after { left: -5px; top: 20px; height: 50px; } 
         .wave-2::after { right: -5px; bottom: 20px; height: 70px; } 
         .wave-3::after { left: -5px; top: 40px; height: 40px; } 
@@ -113,12 +89,9 @@
         .wave-6::after { right: -5px; top: 40px; height: 80px; } 
         .wave-7::after { left: -5px; top: 10px; height: 60px; }
         
-        .wave-1 { transform: translateY(15px); } 
-        .wave-2 { transform: translateY(45px); } 
-        .wave-3 { transform: translateY(30px); } 
-        .wave-4 { transform: translateY(5px); } 
-        .wave-5 { transform: translateY(50px); } 
-        .wave-6 { transform: translateY(15px); } 
+        .wave-1 { transform: translateY(15px); } .wave-2 { transform: translateY(45px); } 
+        .wave-3 { transform: translateY(30px); } .wave-4 { transform: translateY(5px); } 
+        .wave-5 { transform: translateY(50px); } .wave-6 { transform: translateY(15px); } 
         .wave-7 { transform: translateY(35px); }
 
         .nav-item:hover .nav-text { color: #ffffff; text-shadow: 0 0 10px #a4b0e0, 0 0 20px #6a9eff; }
@@ -136,11 +109,8 @@
         .worldview-title span { background: rgba(40, 60, 110, 0.7); padding: 4px 18px; border-radius: 40px; font-size: 1rem; color: #b0c8ff; border: 1px solid rgba(150, 180, 255, 0.3); }
         .worldview-text { font-size: 1.2rem; line-height: 1.9; color: #c8d4f0; text-indent: 2em; background: rgba(10, 20, 45, 0.5); padding: 20px 30px; border-radius: 30px; border-left: 8px solid #6a9eff; }
 
-        /* ⭐️ 简介下面巨大的 START 入口 ⭐️ */
-        .start-hero {
-            display: flex; justify-content: center; align-items: center;
-            height: 300px; margin-bottom: 50px; position: relative; cursor: pointer;
-        }
+        /* 巨大的 START 入口 */
+        .start-hero { display: flex; justify-content: center; align-items: center; height: 300px; margin-bottom: 50px; position: relative; cursor: pointer; }
         .start-hero-content { display: flex; align-items: center; justify-content: center; gap: 20px; transition: transform 0.4s ease; }
         .start-hero:hover .start-hero-content { transform: scale(1.05); }
         .start-line { width: 2px; height: 200px; background: #ffffff; transform: rotate(35deg); box-shadow: 0 0 15px rgba(255, 255, 255, 0.8); transition: all 0.4s ease; }
@@ -208,7 +178,7 @@
         .back-to-home:hover { color: #ffffff; text-shadow: 0 0 15px #aaccff; }
         .back-to-home span { font-family: 'Georgia', serif; font-style: italic; font-size: 1.1rem; opacity: 0.7; }
 
-        /* ========== 转场动画 ========== */
+        /* ========== 进入转场 (线条切割) ========== */
         #transition-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000000; z-index: 9999; display: none;
@@ -223,6 +193,25 @@
         @keyframes sliceRight { 0% { transform: rotate(35deg) translateX(100vw); } 50% { transform: rotate(35deg) translateX(0); opacity: 1; } 100% { transform: rotate(35deg) translateX(100vw); opacity: 0; } }
         .animate-slice { animation: fadeInOut 1.2s ease-in-out forwards; }
         @keyframes fadeInOut { 0% { background: rgba(0,0,0,0); } 50% { background: rgba(0,0,0,1); } 100% { background: rgba(0,0,0,1); } }
+
+        /* =========================================
+           ⭐️ 返回转场 (折纸切入切出) ⭐️
+           ========================================= */
+        #return-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 9999; display: none; pointer-events: none; overflow: hidden;
+        }
+        .return-paper {
+            position: absolute; top: -10%; right: -100vw; width: 100vw; height: 120vh;
+            background-color: #b5c1ec; /* 提取自你截图的浅紫色 */
+            /* 用 clip-path 切出一个折纸/箭头的形状，模仿截图 */
+            clip-path: polygon(100% 0, 100% 100%, 0 100%, 30% 50%, 0 0);
+            box-shadow: -20px 0 50px rgba(181, 193, 236, 0.3);
+            transition: transform 0.6s cubic-bezier(0.7, 0, 0.3, 1);
+        }
+        .return-paper.active {
+            transform: translateX(-130vw); /* 从右侧滑入并扫过屏幕 */
+        }
 
         /* 模态框 */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 5, 15, 0.75); backdrop-filter: blur(12px); display: flex; justify-content: center; align-items: center; visibility: hidden; opacity: 0; transition: 0.3s; z-index: 2000; }
@@ -272,13 +261,11 @@
                 <div class="logo-sub">Omni-Planning</div>
             </div>
 
-            <!-- ⭐️ 绝对居中的“开始 / START” ⭐️ -->
             <a href="javascript:void(0)" class="nav-start-btn" onclick="triggerTransition()">
                 <span class="nav-start-cn">开始</span>
                 <span class="nav-start-en">START</span>
             </a>
 
-            <!-- 右侧菜单 (只剩7个，波浪线重新分配) -->
             <div class="nav-links">
                 <a href="javascript:void(0)" class="nav-item wave-1" onclick="switchView('home')"><span class="nav-text">首页</span></a>
                 <a href="javascript:void(0)" class="nav-item wave-2" onclick="switchView('home')"><span class="nav-text">地区</span></a>
@@ -290,9 +277,8 @@
             </div>
         </nav>
 
-        <!-- ================= 视图1：主界面 (简介 + 开始 + 作者) ================= -->
+        <!-- ================= 视图1：主界面 ================= -->
         <div id="view-home" class="view-container active">
-            
             <section class="worldview-section">
                 <div class="worldview-title">✨ 简介 <span>序章</span></div>
                 <div class="worldview-text">
@@ -300,7 +286,6 @@
                 </div>
             </section>
 
-            <!-- 挪到简介下面的巨大 START -->
             <div class="start-hero" onclick="triggerTransition()">
                 <div class="start-hero-content">
                     <div class="start-text-cn">开始</div>
@@ -370,15 +355,21 @@
             </div>
         </div>
 
+        <!-- ⭐️ 返回按钮，触发新动画 ⭐️ -->
         <div class="back-to-home" onclick="closeExplore()">
             ← 返回主页 <span>Back to home</span>
         </div>
     </div>
 
-    <!-- 转场动画遮罩 -->
+    <!-- 进入转场遮罩 -->
     <div id="transition-overlay">
         <div class="slice-line left"></div>
         <div class="slice-line right"></div>
+    </div>
+
+    <!-- ⭐️ 返回转场遮罩 (折纸效果) ⭐️ -->
+    <div id="return-overlay">
+        <div class="return-paper"></div>
     </div>
 
     <!-- 角色弹窗 -->
@@ -457,7 +448,10 @@
         // =========================================
         const transitionOverlay = document.getElementById('transition-overlay');
         const explorePage = document.getElementById('page-explore');
+        const returnOverlay = document.getElementById('return-overlay');
+        const returnPaper = document.querySelector('.return-paper');
 
+        // 进入探索页 (斜线切割)
         function triggerTransition() {
             transitionOverlay.style.display = 'flex';
             void transitionOverlay.offsetWidth;
@@ -474,8 +468,26 @@
             }, 1200);
         }
 
+        // ⭐️ 返回主页 (折纸飞入扫屏) ⭐️
         function closeExplore() {
-            explorePage.classList.remove('show');
+            // 1. 显示折纸遮罩层
+            returnOverlay.style.display = 'block';
+            void returnPaper.offsetWidth; // 强制重绘，确保动画能触发
+            
+            // 2. 让折纸从右侧滑入
+            returnPaper.classList.add('active');
+
+            // 3. 在折纸正好盖住屏幕的时候（0.4秒），切换页面
+            setTimeout(() => {
+                explorePage.classList.remove('show');
+                window.scrollTo(0, 0);
+            }, 400);
+
+            // 4. 动画完全结束后（0.8秒），隐藏遮罩层并重置状态
+            setTimeout(() => {
+                returnOverlay.style.display = 'none';
+                returnPaper.classList.remove('active');
+            }, 800);
         }
 
 
