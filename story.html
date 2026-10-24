@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>剧情 - 万象企划</title>
     <meta name="description" content="万象企划 TE-Planning 官方剧情页面，包含主线、支线及番外等精彩内容。">
-    <meta name="keywords" content="万象企划, TE-Planning, 剧情, 主线, 支线, 番外">
     
     <style>
         /* ========== 全局样式 ========== */
@@ -26,12 +25,12 @@
             background: rgba(2, 4, 17, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(148, 163, 184, 0.15); z-index: 100;
         }
-        .nav-logo { font-size: 1.1rem; font-weight: 600; color: #e2e8f0; letter-spacing: 2px; text-shadow: 0 0 10px rgba(226, 232, 240, 0.2); }
+        .nav-logo { font-size: 1.1rem; font-weight: 600; color: #e2e8f0; letter-spacing: 2px; }
         .back-btn {
             color: #94a3b8; text-decoration: none; font-size: 0.95rem; letter-spacing: 1px;
             padding: 6px 16px; border-radius: 20px; transition: all 0.3s ease; border: 1px solid transparent;
         }
-        .back-btn:hover { color: #ffffff; background: rgba(148, 163, 184, 0.1); border-color: rgba(148, 163, 184, 0.3); box-shadow: 0 0 15px rgba(148, 163, 184, 0.2); }
+        .back-btn:hover { color: #ffffff; background: rgba(148, 163, 184, 0.1); border-color: rgba(148, 163, 184, 0.3); }
 
         /* ========== 左侧星轨悬垂菜单 ========== */
         .main-container { display: flex; margin-top: 60px; min-height: calc(100vh - 60px); position: relative; z-index: 10; }
@@ -57,156 +56,143 @@
         .menu-item:hover::after { border-color: #ffffff; box-shadow: 0 0 8px #ffffff, 0 0 15px #94a3b8; transform: rotate(45deg) scale(1.2); }
 
         /* =========================================
-           主线展开视图 (新页面层)
+           主线展开视图 (全屏层)
            ========================================= */
         #main-story-view {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #060a17; /* 极深底色 */
+            background: #060a17;
             background-image: radial-gradient(circle at center, #0e1735 0%, #020411 100%);
-            z-index: 999; /* 覆盖在主页面上，但在导航栏下方一点点，或者完全盖住也可以 */
+            z-index: 999;
             overflow-y: auto;
             visibility: hidden;
             opacity: 0;
             transition: opacity 0.5s ease, visibility 0.5s;
-            padding: 80px 10vw; /* 留出充足边距 */
+            padding: 80px 10vw; 
             display: flex;
             flex-direction: column;
         }
 
-        /* 触发显示时的类 */
         #main-story-view.active {
             visibility: visible;
             opacity: 1;
         }
 
-        /* 关闭按钮 (返回左侧菜单) */
+        /* 关闭按钮 */
         .close-story-btn {
             position: absolute;
-            top: 25px;
-            right: 40px;
-            color: #7b8cde;
-            font-size: 1rem;
-            cursor: pointer;
+            top: 25px; right: 40px;
+            color: #7b8cde; font-size: 1rem; cursor: pointer;
             padding: 8px 20px;
             border: 1px solid rgba(123, 140, 222, 0.3);
-            border-radius: 30px;
-            transition: all 0.3s;
+            border-radius: 30px; transition: all 0.3s;
             background: rgba(10, 20, 40, 0.5);
         }
         .close-story-btn:hover {
-            color: #ffffff;
-            background: rgba(123, 140, 222, 0.2);
+            color: #ffffff; background: rgba(123, 140, 222, 0.2);
             box-shadow: 0 0 15px rgba(123, 140, 222, 0.4);
         }
 
-        /* 头部标题：主線 / 万象卷 */
+        /* 头部标题 */
         .story-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 60px;
-            font-size: 3rem;
-            font-weight: 300;
-            letter-spacing: 4px;
+            display: flex; align-items: center; gap: 15px;
+            margin-bottom: 60px; font-size: 3rem; font-weight: 300; letter-spacing: 4px;
         }
         .story-title-cn { color: #e2e8f0; }
         .story-title-slash { color: #e2e8f0; font-style: italic; margin: 0 5px; transform: skewX(-15deg); display: inline-block; }
         .story-title-sub { color: #6e7bd1; font-weight: 400; text-shadow: 0 0 20px rgba(110, 123, 209, 0.4); }
 
-        /* 季数/章节外层容器 */
-        .season-block {
-            display: flex;
-            margin-bottom: 50px;
-            opacity: 0; /* 初始隐藏，等待 JS 激活 */
+        /* 动画元素容器 */
+        .season-container {
+            opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.8s ease, transform 0.8s ease;
+            margin-bottom: 30px;
         }
-        .season-block.show {
+        .season-container.show {
             opacity: 1;
             transform: translateY(0);
         }
 
-        /* 左侧季数 */
-        .season-label {
-            width: 180px;
-            flex-shrink: 0;
-            font-size: 1.6rem;
-            color: #b0c4de;
-            letter-spacing: 2px;
-            padding-top: 5px;
-            transition: color 0.3s;
+        /* 季数标题 (可点击展开的栏) */
+        .season-title-box {
+            display: flex; align-items: center; cursor: pointer;
+            padding: 10px 0; border-bottom: 1px solid rgba(110, 123, 209, 0.15);
+            transition: all 0.3s;
         }
-        /* 特殊的高亮季数颜色 */
-        .season-label.highlight {
-            color: #6e7bd1;
-            text-shadow: 0 0 15px rgba(110, 123, 209, 0.4);
+        .season-title-box:hover {
+            border-bottom-color: rgba(110, 123, 209, 0.5);
         }
-
-        /* 右侧内容 */
-        .season-content {
-            flex-grow: 1;
+        
+        .season-title-text {
+            font-size: 1.8rem; color: #b0c4de; letter-spacing: 2px;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+        .season-title-box:hover .season-title-text {
+            color: #ffffff; text-shadow: 0 0 15px rgba(255,255,255,0.3);
         }
 
-        /* 只有单行或普通行的样式 */
-        .chapter-line {
-            font-size: 1.2rem;
-            color: #94a3b8;
-            line-height: 2;
-            letter-spacing: 1px;
-            font-style: italic;
-            font-family: 'Georgia', serif;
+        /* 特殊的高亮季数 */
+        .season-title-text.highlight {
+            color: #6e7bd1; text-shadow: 0 0 15px rgba(110, 123, 209, 0.4);
+        }
+        .season-title-box:hover .season-title-text.highlight {
+            color: #8a98ff;
         }
 
-        /* 网格布局（针对第二季的多集展开） */
-        .chapter-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px 40px;
+        /* 展开/收起的小箭头 */
+        .arrow-icon {
+            margin-left: auto; font-size: 1.2rem; color: #6e7bd1;
+            transition: transform 0.4s ease;
+        }
+        .season-title-box.open .arrow-icon {
+            transform: rotate(180deg);
         }
 
-        /* 每个单集条目 */
+        /* =========================================
+           折叠的内容区 (纯 CSS + 一点点 JS 控制高度)
+           ========================================= */
+        .chapter-list {
+            max-height: 0; /* 默认收起 */
+            overflow: hidden;
+            transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            padding-left: 10px; /* 整体往右缩进一点 */
+        }
+        /* 展开时的类 */
+        .chapter-list.open {
+            max-height: 2000px; /* 给个足够大的值，确保内容能完全展示 */
+        }
+
+        /* 单集条目 */
         .episode-item {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color: #8494b0;
+            padding: 15px 0;
             transition: all 0.3s ease;
-            cursor: default;
             display: flex;
             align-items: center;
+            cursor: default;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
         }
         .episode-item:hover {
             color: #ffffff;
             text-shadow: 0 0 10px rgba(255,255,255,0.5);
-            transform: translateX(5px);
+            padding-left: 10px; /* 悬浮时微微向右移 */
         }
+
         /* 集数序号 */
         .ep-num {
-            font-style: italic;
-            font-family: 'Georgia', serif;
-            color: #6e7bd1;
-            margin-right: 8px;
-            width: 25px;
-            display: inline-block;
+            font-style: italic; font-family: 'Georgia', serif;
+            color: #6e7bd1; margin-right: 20px; width: 30px;
+            display: inline-block; font-size: 1.3rem;
         }
 
-        /* 下方后续剧情大纲 */
-        .sub-arcs {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(110, 123, 209, 0.15);
-        }
-        .sub-arc-item {
-            font-size: 1.15rem;
-            color: #8494b0;
-            margin-bottom: 15px;
-            font-family: 'Georgia', serif;
-            font-style: italic;
-            transition: color 0.3s;
-        }
-        .sub-arc-item:hover {
-            color: #b0c4de;
+        /* 纯文本占位 (如“如此类推”) */
+        .text-placeholder {
+            font-size: 1.2rem; color: #94a3b8; padding: 15px 0;
+            font-family: 'Georgia', serif; font-style: italic;
         }
 
-        /* ========== 手机端适配 ========== */
+        /* 手机端适配 */
         @media (max-width: 768px) {
             .top-navbar { padding: 0 20px; }
             .main-container { flex-direction: column; }
@@ -214,12 +200,11 @@
             .menu-item.long-line::before { top: -200px; }
             
             #main-story-view { padding: 80px 20px 40px; }
-            .story-header { font-size: 2rem; margin-bottom: 40px; flex-wrap: wrap; }
+            .story-header { font-size: 2.2rem; margin-bottom: 40px; }
             .close-story-btn { top: 15px; right: 20px; font-size: 0.9rem; padding: 5px 15px;}
             
-            .season-block { flex-direction: column; margin-bottom: 30px; }
-            .season-label { width: 100%; margin-bottom: 15px; font-size: 1.4rem; }
-            .chapter-grid { grid-template-columns: 1fr; gap: 15px; }
+            .season-title-text { font-size: 1.5rem; }
+            .episode-item { font-size: 1.1rem; padding: 12px 0; }
         }
     </style>
 </head>
@@ -230,11 +215,9 @@
         <a href="index.html" class="back-btn">← 返回首页</a>
     </header>
 
-    <!-- 左侧星轨侧边栏 -->
     <main class="main-container">
         <aside class="sidebar">
             <div class="menu-group">
-                <!-- ⭐️ 点击这里触发全屏主线界面 ⭐️ -->
                 <a class="menu-item long-line" onclick="openMainStory()">
                     <span class="menu-text">主線</span>
                 </a>
@@ -248,100 +231,111 @@
                 <a href="#" class="menu-item long-line"><span class="menu-text">其他</span></a>
             </div>
         </aside>
-        <section class="content-area">
-            <!-- 留白，这里以后可以放其他东西 -->
-        </section>
+        <section class="content-area"></section>
     </main>
 
     <!-- =========================================
-         全屏：主线档案视图 (点击主線后出现)
+         全屏：主线档案视图
          ========================================= -->
     <div id="main-story-view">
         <div class="close-story-btn" onclick="closeMainStory()">✕ 收起</div>
         
-        <!-- 大标题 -->
         <div class="story-header">
             <span class="story-title-cn">主線</span>
             <span class="story-title-slash">/</span>
             <span class="story-title-sub">万象卷</span>
         </div>
 
-        <!-- 第1季 -->
-        <div class="season-block" id="season-1">
-            <div class="season-label">第1季</div>
-            <div class="season-content">
-                <div class="chapter-line">· 1-12 沉沉底色</div>
+        <!-- ⭐️ 第一季 ⭐️ -->
+        <div class="season-container" id="season-1-wrap">
+            <!-- 点击这里展开/收起 -->
+            <div class="season-title-box" onclick="toggleSeason('season-1-list', this)">
+                <span class="season-title-text">第1季</span>
+                <span class="arrow-icon">▼</span>
+            </div>
+            
+            <!-- 1-12章的列表 -->
+            <div class="chapter-list" id="season-1-list">
+                <div class="episode-item"><span class="ep-num">· 1</span> 沉沉底色·坠落</div>
+                <div class="episode-item"><span class="ep-num">· 2</span> 沉沉底色·初识</div>
+                <div class="episode-item"><span class="ep-num">· 3</span> 沉沉底色·原色石</div>
+                <div class="episode-item"><span class="ep-num">· 4</span> 沉沉底色·风洞防御学院</div>
+                <div class="episode-item"><span class="ep-num">· 5</span> 沉沉底色·祭祀</div>
+                <div class="episode-item"><span class="ep-num">· 6</span> 沉沉底色·再无枷锁的青之飞鸟</div>
+                <div class="episode-item"><span class="ep-num">· 7</span> 沉沉底色·夕阳行者</div>
+                <div class="episode-item"><span class="ep-num">· 8</span> 沉沉底色·倒计时</div>
+                <div class="episode-item"><span class="ep-num">· 9</span> 沉沉底色·于坠入黑暗时脱离</div>
+                <div class="episode-item"><span class="ep-num">· 10</span> 沉沉底色·通行证</div>
+                <div class="episode-item"><span class="ep-num">· 11</span> 沉沉底色·休闲日</div>
+                <div class="episode-item"><span class="ep-num">· 12</span> 沉沉底色·我所不知的世界之大</div>
             </div>
         </div>
 
-        <!-- 第2季 -->
-        <div class="season-block" id="season-2">
-            <div class="season-label highlight">第2季</div>
-            <div class="season-content">
-                <!-- 用网格展示多集 -->
-                <div class="chapter-grid">
-                    <div class="episode-item"><span class="ep-num">·1</span> 沉沉底色·坠落</div>
-                    <div class="episode-item"><span class="ep-num">·7</span> 沉沉底色·夕阳行者</div>
-                    <div class="episode-item"><span class="ep-num">·2</span> 沉沉底色·初识</div>
-                    <div class="episode-item"><span class="ep-num">·8</span> 沉沉底色·倒计时</div>
-                    <div class="episode-item"><span class="ep-num">·3</span> 沉沉底色·原色石</div>
-                    <div class="episode-item"><span class="ep-num">·9</span> 沉沉底色·于坠入黑暗时脱离</div>
-                    <div class="episode-item"><span class="ep-num">·4</span> 沉沉底色·风洞防御学院</div>
-                    <div class="episode-item"><span class="ep-num">·10</span> 沉沉底色·通行证</div>
-                    <div class="episode-item"><span class="ep-num">·5</span> 沉沉底色·祭祀</div>
-                    <div class="episode-item"><span class="ep-num">·11</span> 沉沉底色·休闲日</div>
-                    <div class="episode-item"><span class="ep-num">·6</span> 沉沉底色·再无枷锁的青之飞鸟</div>
-                    <div class="episode-item"><span class="ep-num">·12</span> 沉沉底色·我所不知的世界之大</div>
-                </div>
+        <!-- ⭐️ 第二季 (占位) ⭐️ -->
+        <div class="season-container" id="season-2-wrap">
+            <div class="season-title-box" onclick="toggleSeason('season-2-list', this)">
+                <span class="season-title-text highlight">第2季</span>
+                <span class="arrow-icon">▼</span>
+            </div>
+            <div class="chapter-list" id="season-2-list">
+                <div class="episode-item"><span class="ep-num">· 1</span> 第二季第一章（待定）</div>
+                <div class="episode-item"><span class="ep-num">· 2</span> 第二季第二章（待定）</div>
+                <div class="episode-item"><span class="ep-num">· 3</span> 第二季第三章（待定）</div>
             </div>
         </div>
 
-        <!-- 主线后续大纲区 -->
-        <div class="season-block" id="season-arcs">
-            <div class="season-label" style="font-size: 1.2rem; color: #8494b0;">：如此类推...</div>
-            <div class="season-content">
-                <div class="sub-arcs">
-                    <div class="sub-arc-item">· 12-16 环星大赛</div>
-                    <div class="sub-arc-item">· 16-26 命運织之羁绊</div>
-                    <div class="sub-arc-item">· 26-30 迷失与解离如梦魇</div>
-                </div>
+        <!-- ⭐️ 后续大纲 ⭐️ -->
+        <div class="season-container" id="season-arcs-wrap">
+            <div class="season-title-box" onclick="toggleSeason('season-arcs-list', this)">
+                <span class="season-title-text" style="font-size: 1.4rem; color: #8494b0;">：如此类推...</span>
+                <span class="arrow-icon">▼</span>
+            </div>
+            <div class="chapter-list" id="season-arcs-list">
+                <div class="episode-item"><span class="ep-num">·</span> 12-16 环星大赛</div>
+                <div class="episode-item"><span class="ep-num">·</span> 16-26 命運织之羁绊</div>
+                <div class="episode-item"><span class="ep-num">·</span> 26-30 迷失与解离如梦魇</div>
             </div>
         </div>
 
     </div>
 
     <script>
-        // 控制主线视图的打开和关闭
         const mainStoryView = document.getElementById('main-story-view');
         
-        // 动画依次触发的元素列表
+        // 动画依次触发的三个区块
         const animationTargets = [
-            document.getElementById('season-1'),
-            document.getElementById('season-2'),
-            document.getElementById('season-arcs')
+            document.getElementById('season-1-wrap'),
+            document.getElementById('season-2-wrap'),
+            document.getElementById('season-arcs-wrap')
         ];
 
         function openMainStory() {
-            // 1. 让大背景显示 (触发 fade-in)
             mainStoryView.classList.add('active');
             
-            // 2. 依次让内部区块浮现 (颜色渐变 + 上浮)
-            // 为了防止连续点击出 bug，先清除所有 show 类
+            // 依次让三个季数的标题浮现
             animationTargets.forEach(el => el.classList.remove('show'));
-
             animationTargets.forEach((el, index) => {
                 setTimeout(() => {
                     if (el) el.classList.add('show');
-                }, 300 + (index * 200)); // 延迟 300ms 开始，每个间隔 200ms
+                }, 300 + (index * 200)); 
             });
 
-            // 3. 允许页面滚动到顶部
             mainStoryView.scrollTop = 0;
         }
 
         function closeMainStory() {
-            // 移除显示类，触发淡出
             mainStoryView.classList.remove('active');
+        }
+
+        // ⭐️ 手风琴展开/收起 逻辑 ⭐️
+        function toggleSeason(listId, titleBox) {
+            const list = document.getElementById(listId);
+            
+            // 切换内容区的 open 类
+            list.classList.toggle('open');
+            
+            // 切换箭头的旋转
+            titleBox.classList.toggle('open');
         }
     </script>
 </body>
