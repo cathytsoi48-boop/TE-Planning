@@ -125,11 +125,16 @@
             display: flex;
             align-items: flex-start;
             gap: 8px;
-            transition: color 0.3s;
+            transition: all 0.4s ease; /* 加入了颜色渐变动画 */
         }
         .row-label:hover { color: #ffffff; }
-        .row-label.highlight { color: #6e7bd1; text-shadow: 0 0 15px rgba(110, 123, 209, 0.4); }
         
+        /* ⭐️ 展开时的颜色渐深/高亮样式 */
+        .row-label.open { 
+            color: #ffffff; 
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.6); 
+        }
+
         /* 季数旁边的小箭头 */
         .season-arrow {
             font-size: 0.9rem;
@@ -139,9 +144,7 @@
         }
         .row-label.open .season-arrow { transform: rotate(180deg); }
 
-        /* =========================================
-           ⭐️ 新增大外层折叠 (第一季整体)
-           ========================================= */
+        /* 新增大外层折叠 (第一季整体) */
         .season-content-wrapper {
             flex-grow: 1;
             max-height: 0;
@@ -149,7 +152,7 @@
             transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .season-content-wrapper.open {
-            max-height: 1500px; /* 给个足够的高度 */
+            max-height: 1500px;
         }
 
         /* 右侧内容区 */
@@ -169,15 +172,19 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            transition: all 0.3s;
+            transition: all 0.4s ease; /* 渐变动画 */
             font-family: 'Georgia', serif;
             font-style: italic;
             padding-bottom: 5px;
         }
-        .toggle-item:hover {
-            color: #ffffff;
+        .toggle-item:hover { color: #ffffff; }
+        
+        /* ⭐️ 点开 1-12 时的颜色渐深样式 */
+        .toggle-item.open { 
+            color: #ffffff; 
             text-shadow: 0 0 10px rgba(255,255,255,0.5);
         }
+
         .toggle-arrow {
             font-size: 0.8rem;
             color: #6e7bd1;
@@ -192,9 +199,16 @@
         }
         .chapter-grid-wrapper.open { max-height: 1000px; }
 
+        /* =========================================
+           ⭐️ 网格排版终极修复 ⭐️
+           ========================================= */
         .chapter-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr; /* 电脑端两列 */
+            /* 强制让它先上下填充满左列，再填右列，保证顺序是 1-6, 7-12 */
+            grid-auto-flow: column; 
+            grid-template-rows: repeat(6, auto); 
+            
             gap: 20px 40px;
             padding: 20px 0;
             border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
@@ -244,12 +258,19 @@
             .list-row { flex-direction: column; margin-bottom: 25px; }
             .row-label {
                 width: 100%;
-                margin-bottom: 5px; /* 手机端间距调小一点 */
+                margin-bottom: 5px;
                 font-size: 1.4rem;
                 border-bottom: 1px solid rgba(110, 123, 209, 0.15);
                 padding-bottom: 8px;
             }
-            .chapter-grid { grid-template-columns: 1fr; gap: 15px; }
+            
+            /* ⭐️ 手机端恢复单列，取消网格限制，顺序绝对正确 ⭐️ */
+            .chapter-grid { 
+                grid-template-columns: 1fr; 
+                grid-auto-flow: row; /* 恢复按行排列 */
+                grid-template-rows: auto; /* 清除固定行数 */
+                gap: 15px; 
+            }
         }
     </style>
 </head>
@@ -291,41 +312,40 @@
             <span class="story-title-sub">万象卷</span>
         </div>
 
-        <!-- ⭐️ 第1季 (整块默认隐藏，点击“第1季”才出内容) ⭐️ -->
+        <!-- ⭐️ 第1季 ⭐️ -->
         <div class="list-row" id="row-1">
-            <!-- 第一层：点击这个展开第1季的分类 -->
-            <div class="row-label toggle-season-label" onclick="toggleSeason('season-1-content', this)">
+            <!-- 外层折叠：点击展开/收起 -->
+            <div class="row-label" onclick="toggleSeason('season-1-content', this)">
                 第1季 <span class="season-arrow">▼</span>
             </div>
             
-            <!-- 第1季的具体内容都包在这个 wrapper 里 -->
             <div class="season-content-wrapper" id="season-1-content">
                 <div class="row-content">
                     
-                    <!-- 第二层：1-12 的具体章节折叠 -->
+                    <!-- 内层折叠：点击展开/收起 12集 -->
                     <div class="toggle-item" onclick="toggleChapters('grid-1', this)">
                         · 1-12 沉沉底色 <span class="toggle-arrow">▼</span>
                     </div>
                     
-                    <!-- 12集网格 -->
                     <div class="chapter-grid-wrapper" id="grid-1">
                         <div class="chapter-grid">
+                            <!-- ⭐️ 现在的 HTML 顺序是完美的 1 到 12 ⭐️ -->
                             <div class="episode-item"><span class="ep-num">·1</span> 沉沉底色·坠落</div>
-                            <div class="episode-item"><span class="ep-num">·7</span> 沉沉底色·夕阳行者</div>
                             <div class="episode-item"><span class="ep-num">·2</span> 沉沉底色·初识</div>
-                            <div class="episode-item"><span class="ep-num">·8</span> 沉沉底色·倒计时</div>
                             <div class="episode-item"><span class="ep-num">·3</span> 沉沉底色·原色石</div>
-                            <div class="episode-item"><span class="ep-num">·9</span> 沉沉底色·于坠入黑暗时脱离</div>
                             <div class="episode-item"><span class="ep-num">·4</span> 沉沉底色·风洞防御学院</div>
-                            <div class="episode-item"><span class="ep-num">·10</span> 沉沉底色·通行证</div>
                             <div class="episode-item"><span class="ep-num">·5</span> 沉沉底色·祭祀</div>
-                            <div class="episode-item"><span class="ep-num">·11</span> 沉沉底色·休闲日</div>
                             <div class="episode-item"><span class="ep-num">·6</span> 沉沉底色·再无枷锁的青之飞鸟</div>
+                            <div class="episode-item"><span class="ep-num">·7</span> 沉沉底色·夕阳行者</div>
+                            <div class="episode-item"><span class="ep-num">·8</span> 沉沉底色·倒计时</div>
+                            <div class="episode-item"><span class="ep-num">·9</span> 沉沉底色·于坠入黑暗时脱离</div>
+                            <div class="episode-item"><span class="ep-num">·10</span> 沉沉底色·通行证</div>
+                            <div class="episode-item"><span class="ep-num">·11</span> 沉沉底色·休闲日</div>
                             <div class="episode-item"><span class="ep-num">·12</span> 沉沉底色·我所不知的世界之大</div>
                         </div>
                     </div>
 
-                    <!-- 下方的大纲 -->
+                    <!-- 下方大纲 -->
                     <div class="outline-text">· 12-16 环星大赛</div>
                     <div class="outline-text">· 16-26 命運织之羁绊</div>
                     <div class="outline-text">· 26-30 迷失与解离如梦魇</div>
@@ -333,22 +353,16 @@
             </div>
         </div>
 
-        <!-- ⭐️ 第2季 ⭐️ -->
+        <!-- 第2~5季 (纯占位) -->
         <div class="list-row" id="row-2">
-            <div class="row-label highlight">第2季</div>
+            <div class="row-label">第2季</div>
         </div>
-
-        <!-- ⭐️ 第3季 ⭐️ -->
         <div class="list-row" id="row-3">
             <div class="row-label">第3季</div>
         </div>
-
-        <!-- ⭐️ 第4季 ⭐️ -->
         <div class="list-row" id="row-4">
             <div class="row-label">第4季</div>
         </div>
-
-        <!-- ⭐️ 第5季 ⭐️ -->
         <div class="list-row" id="row-5">
             <div class="row-label">第5季</div>
         </div>
@@ -369,7 +383,6 @@
         function openMainStory() {
             mainStoryView.classList.add('active');
             
-            // 重新播放这5行的浮现动画
             animationTargets.forEach(el => el.classList.remove('show'));
             animationTargets.forEach((el, index) => {
                 setTimeout(() => {
@@ -384,17 +397,21 @@
             mainStoryView.classList.remove('active');
         }
 
-        // ⭐️ 第一层：点击“第1季”展开下方的 4 个选项 ⭐️
+        // ⭐️ 第一层：点击“第1季”展开
         function toggleSeason(contentId, labelElement) {
             const content = document.getElementById(contentId);
+            // 切换展开状态
             content.classList.toggle('open');
+            // 切换高亮状态（文字变白发光）
             labelElement.classList.toggle('open');
         }
 
-        // ⭐️ 第二层：点击“1-12”展开那12集 ⭐️
+        // ⭐️ 第二层：点击“1-12”展开
         function toggleChapters(gridId, toggleItem) {
             const gridWrapper = document.getElementById(gridId);
+            // 切换展开状态
             gridWrapper.classList.toggle('open');
+            // 切换高亮状态
             toggleItem.classList.toggle('open');
         }
     </script>
