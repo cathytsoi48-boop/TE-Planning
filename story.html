@@ -55,20 +55,15 @@
         .menu-item:hover::after { border-color: #ffffff; box-shadow: 0 0 8px #ffffff, 0 0 15px #94a3b8; transform: rotate(45deg) scale(1.2); }
 
         /* =========================================
-           主线目录视图 (全屏层)
+           主线目录视图
            ========================================= */
         #main-story-view {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #060a17;
             background-image: radial-gradient(circle at center, #0e1735 0%, #020411 100%);
-            z-index: 999;
-            overflow-y: auto;
-            visibility: hidden;
-            opacity: 0;
+            z-index: 999; overflow-y: auto; visibility: hidden; opacity: 0;
             transition: opacity 0.5s ease, visibility 0.5s;
-            padding: 80px 10vw; 
-            display: flex;
-            flex-direction: column;
+            padding: 80px 10vw; display: flex; flex-direction: column;
         }
         #main-story-view.active { visibility: visible; opacity: 1; }
 
@@ -121,97 +116,78 @@
             gap: 20px 40px; padding: 20px 0; border-bottom: 1px dashed rgba(255, 255, 255, 0.1); margin-bottom: 10px;
         }
 
-        /* ⭐️ 章节条目改为可点击 ⭐️ */
+        /* ⭐️ 基础章节条目（未更新状态：低调暗淡） ⭐️ */
         .episode-item {
-            font-size: 1.05rem; color: #8494b0; display: flex; align-items: center;
+            font-size: 1.05rem; color: #4a5a7a; /* 颜色更暗，表示未更新 */
+            display: flex; align-items: center;
             transition: all 0.3s; cursor: pointer;
         }
-        .episode-item:hover { color: #ffffff; transform: translateX(5px); text-shadow: 0 0 10px rgba(255,255,255,0.4); }
-        .ep-num { font-style: italic; font-family: 'Georgia', serif; color: #6e7bd1; margin-right: 12px; width: 25px; display: inline-block; font-size: 1.15rem; }
+        .episode-item:hover { color: #8494b0; transform: translateX(5px); }
+        .ep-num { font-style: italic; font-family: 'Georgia', serif; color: #4a5a7a; margin-right: 12px; width: 25px; display: inline-block; font-size: 1.15rem; }
+
+        /* ⭐️ 有内容的章节条目（高亮状态） ⭐️ */
+        .episode-item.is-updated {
+            color: #e2e8f0; /* 高亮：亮白/浅灰 */
+        }
+        .episode-item.is-updated .ep-num {
+            color: #6e7bd1; /* 序号亮紫色 */
+        }
+        .episode-item.is-updated::before {
+            content: '✦'; /* 加个小星星标记，更显眼 */
+            color: #6e7bd1;
+            position: absolute;
+            margin-left: -18px;
+            font-size: 0.9rem;
+            text-shadow: 0 0 8px rgba(110, 123, 209, 0.8);
+        }
+        .episode-item.is-updated:hover {
+            color: #ffffff;
+            text-shadow: 0 0 12px rgba(255,255,255,0.6);
+            transform: translateX(5px);
+        }
 
         .outline-text { font-size: 1.15rem; color: #8494b0; font-family: 'Georgia', serif; font-style: italic; transition: color 0.3s; }
         .outline-text:hover { color: #e2e8f0; }
 
 
         /* =========================================
-           ⭐️ 沉浸式正文阅读器 (Reader View) ⭐️
+           沉浸式正文阅读器 (Reader View)
            ========================================= */
         #reader-view {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #0a0d1c; /* 略微深邃的底色 */
-            z-index: 10000; /* 比目录层还要高 */
-            visibility: hidden;
-            opacity: 0;
-            transform: translateY(20px);
+            background: #0a0d1c; z-index: 10000;
+            visibility: hidden; opacity: 0; transform: translateY(20px);
             transition: opacity 0.5s ease, visibility 0.5s, transform 0.5s ease;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
+            overflow-y: auto; display: flex; flex-direction: column;
         }
-        #reader-view.active {
-            visibility: visible;
-            opacity: 1;
-            transform: translateY(0);
-        }
+        #reader-view.active { visibility: visible; opacity: 1; transform: translateY(0); }
 
-        /* 阅读器顶部栏 */
         .reader-topbar {
-            position: sticky; top: 0;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 15px 30px;
-            background: rgba(10, 13, 28, 0.85);
+            position: sticky; top: 0; display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 30px; background: rgba(10, 13, 28, 0.85);
             backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            z-index: 10;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05); z-index: 10;
         }
         .reader-back-btn {
             color: #94a3b8; cursor: pointer; font-size: 1rem;
             display: flex; align-items: center; gap: 5px; transition: 0.3s;
         }
         .reader-back-btn:hover { color: #ffffff; text-shadow: 0 0 10px #aaccff; }
-        .reader-chapter-title {
-            font-size: 1.1rem; color: #e2e8f0; font-weight: 500; letter-spacing: 1px;
-        }
+        .reader-chapter-title { font-size: 1.1rem; color: #e2e8f0; font-weight: 500; letter-spacing: 1px; }
 
-        /* 阅读区 */
-        .reader-content {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 60px 30px 100px;
-            width: 100%;
-        }
-
-        /* 大标题 */
+        .reader-content { max-width: 800px; margin: 0 auto; padding: 60px 30px 100px; width: 100%; }
         .reader-main-title {
-            font-size: 2.5rem;
-            color: #ffffff;
-            text-align: center;
-            margin-bottom: 60px;
-            font-weight: 300;
-            letter-spacing: 3px;
-            text-shadow: 0 0 20px rgba(110, 123, 209, 0.5);
+            font-size: 2.5rem; color: #ffffff; text-align: center; margin-bottom: 60px;
+            font-weight: 300; letter-spacing: 3px; text-shadow: 0 0 20px rgba(110, 123, 209, 0.5);
         }
 
-        /* 正文段落排版 */
         .reader-text p {
-            font-size: 1.15rem;
-            line-height: 2.2;
-            color: #c8d4f0;
-            text-indent: 2em;
-            margin-bottom: 1.5em;
-            text-align: justify;
-            letter-spacing: 0.5px;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            font-size: 1.15rem; line-height: 2.2; color: #c8d4f0; text-indent: 2em;
+            margin-bottom: 1.5em; text-align: justify; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.5);
         }
-
-        /* 段落对话高亮（可选） */
         .reader-text p:last-child {
-            margin-bottom: 0;
-            color: #e2e8f0;
-            font-style: italic;
-            text-align: center;
-            text-indent: 0;
-            margin-top: 40px;
+            margin-bottom: 0; color: #e2e8f0; font-style: italic;
+            text-align: center; text-indent: 0; margin-top: 40px;
         }
 
         /* ========== 手机端适配 ========== */
@@ -227,9 +203,10 @@
             
             .list-row { flex-direction: column; margin-bottom: 25px; }
             .row-label { width: 100%; margin-bottom: 5px; font-size: 1.4rem; border-bottom: 1px solid rgba(110, 123, 209, 0.15); padding-bottom: 8px; }
-            .chapter-grid { grid-template-columns: 1fr; grid-auto-flow: row; grid-template-rows: auto; gap: 15px; }
-
-            /* 手机端阅读器适配 */
+            
+            /* 手机端恢复单列，并加大行距方便点击 */
+            .chapter-grid { grid-template-columns: 1fr; grid-auto-flow: row; grid-template-rows: auto; gap: 18px; }
+            
             .reader-main-title { font-size: 1.8rem; margin-bottom: 40px; }
             .reader-content { padding: 40px 20px 80px; }
             .reader-text p { font-size: 1.05rem; line-height: 2; margin-bottom: 1.2em; }
@@ -288,21 +265,23 @@
                     
                     <div class="chapter-grid-wrapper" id="grid-1">
                         <div class="chapter-grid">
-                            <!-- ⭐️ 给第一集绑定了打开阅读器的点击事件 ⭐️ -->
-                            <div class="episode-item" onclick="openReader('第1集 · 沉染底色·坠落')">
+                            <!-- ⭐️ 第1集：有内容，加上 is-updated 类 ⭐️ -->
+                            <div class="episode-item is-updated" onclick="openReader('第1集 · 沉染底色·坠落')">
                                 <span class="ep-num">·1</span> 沉染底色·坠落
                             </div>
-                            <div class="episode-item"><span class="ep-num">·2</span> 沉染底色·初识 (待更新)</div>
-                            <div class="episode-item"><span class="ep-num">·3</span> 沉染底色·原色石 (待更新)</div>
-                            <div class="episode-item"><span class="ep-num">·4</span> 沉染底色·风洞防御学院</div>
-                            <div class="episode-item"><span class="ep-num">·5</span> 沉染底色·祭祀</div>
-                            <div class="episode-item"><span class="ep-num">·6</span> 沉染底色·再无枷锁的青之飞鸟</div>
-                            <div class="episode-item"><span class="ep-num">·7</span> 沉染底色·夕阳行者</div>
-                            <div class="episode-item"><span class="ep-num">·8</span> 沉染底色·倒计时</div>
-                            <div class="episode-item"><span class="ep-num">·9</span> 沉染底色·于坠入黑暗时脱离</div>
-                            <div class="episode-item"><span class="ep-num">·10</span> 沉染底色·通行证</div>
-                            <div class="episode-item"><span class="ep-num">·11</span> 沉染底色·休闲日</div>
-                            <div class="episode-item"><span class="ep-num">·12</span> 沉染底色·我所不知的世界之大</div>
+                            
+                            <!-- ⭐️ 第2-12集：没内容，保持普通样式，去掉了（待更新）字样 ⭐️ -->
+                            <div class="episode-item" onclick="openReader('第2集 · 沉染底色·初识')"><span class="ep-num">·2</span> 沉染底色·初识</div>
+                            <div class="episode-item" onclick="openReader('第3集 · 沉染底色·原色石')"><span class="ep-num">·3</span> 沉染底色·原色石</div>
+                            <div class="episode-item" onclick="openReader('第4集 · 沉染底色·风洞防御学院')"><span class="ep-num">·4</span> 沉染底色·风洞防御学院</div>
+                            <div class="episode-item" onclick="openReader('第5集 · 沉染底色·祭祀')"><span class="ep-num">·5</span> 沉染底色·祭祀</div>
+                            <div class="episode-item" onclick="openReader('第6集 · 沉染底色·再无枷锁的青之飞鸟')"><span class="ep-num">·6</span> 沉染底色·再无枷锁的青之飞鸟</div>
+                            <div class="episode-item" onclick="openReader('第7集 · 沉染底色·夕阳行者')"><span class="ep-num">·7</span> 沉染底色·夕阳行者</div>
+                            <div class="episode-item" onclick="openReader('第8集 · 沉染底色·倒计时')"><span class="ep-num">·8</span> 沉染底色·倒计时</div>
+                            <div class="episode-item" onclick="openReader('第9集 · 沉染底色·于坠入黑暗时脱离')"><span class="ep-num">·9</span> 沉染底色·于坠入黑暗时脱离</div>
+                            <div class="episode-item" onclick="openReader('第10集 · 沉染底色·通行证')"><span class="ep-num">·10</span> 沉染底色·通行证</div>
+                            <div class="episode-item" onclick="openReader('第11集 · 沉染底色·休闲日')"><span class="ep-num">·11</span> 沉染底色·休闲日</div>
+                            <div class="episode-item" onclick="openReader('第12集 · 沉染底色·我所不知的世界之大')"><span class="ep-num">·12</span> 沉染底色·我所不知的世界之大</div>
                         </div>
                     </div>
 
@@ -322,25 +301,20 @@
 
 
     <!-- =========================================
-         ⭐️ 沉浸式正文阅读器 (Layer 3) ⭐️
+         沉浸式正文阅读器
          ========================================= -->
     <div id="reader-view">
-        <!-- 顶部返回栏 -->
         <div class="reader-topbar">
             <div class="reader-back-btn" onclick="closeReader()">
                 <span>←</span> 返回目录
             </div>
             <div class="reader-chapter-title" id="reader-top-title">沉染底色·坠落</div>
-            <div style="width: 80px;"></div> <!-- 占位平衡 -->
+            <div style="width: 80px;"></div>
         </div>
 
-        <!-- 文章内容区 -->
         <div class="reader-content">
             <h1 class="reader-main-title" id="reader-main-title">第1集 · 沉染底色·坠落</h1>
-            
-            <div class="reader-text" id="reader-body">
-                <!-- 这里的内容由 JS 动态注入 -->
-            </div>
+            <div class="reader-text" id="reader-body"></div>
         </div>
     </div>
 
@@ -361,15 +335,11 @@
             mainStoryView.scrollTop = 0;
         }
 
-        function closeMainStory() {
-            mainStoryView.classList.remove('active');
-        }
-
+        function closeMainStory() { mainStoryView.classList.remove('active'); }
         function toggleSeason(contentId, labelElement) {
             document.getElementById(contentId).classList.toggle('open');
             labelElement.classList.toggle('open');
         }
-
         function toggleChapters(gridId, toggleItem) {
             document.getElementById(gridId).classList.toggle('open');
             toggleItem.classList.toggle('open');
@@ -384,8 +354,7 @@
         const readerMainTitle = document.getElementById('reader-main-title');
         const readerTopTitle = document.getElementById('reader-top-title');
 
-        // 存储你写的正文（这里为了方便管理，把长文本存在变量里。你以后写新的，也可以像这样存一个变量，或者直接通过后端读取）
-        // 注意：这里用反引号 ` 来包裹多行文本，并且我把段落拆分成了 <p> 标签，会有更好的阅读间距
+        // 把你写的正文存入变量
         const chapter1Text = `
             <p>我还记得那一平淡的仲夏夜，我刚赶完午夜末班车回到家，正欲洗去身上的疲惫，躺在床上准备刷会小说。不知道是什么虫子在窗外发出烦人的嗡嗡声，正值炎暑开启的冷气也无法盖过它们声音。慢慢的困了，不知道什么时候睡着了，再次睁开眼睛就到了一个陌生的地方。</p>
             
@@ -424,25 +393,23 @@
         `;
 
 
-        // 打开阅读器
         function openReader(title) {
-            // 更新标题
             readerMainTitle.innerText = title;
             readerTopTitle.innerText = title.split(' · ')[1] || title;
 
-            // 注入正文（如果你以后有第二集，可以在这里写个 if 判断 title 来切换文本）
+            // 判断点击的是哪一集
             if(title.includes('坠落')) {
+                // 有内容，展示正文
                 readerBody.innerHTML = chapter1Text;
             } else {
-                readerBody.innerHTML = `<p style="text-align:center; color:#8494b0; margin-top:50px;">该章节正在紧锣密鼓地撰写中...<br>敬请期待！</p>`;
+                // 没内容，给个温柔提示
+                readerBody.innerHTML = `<p style="text-align:center; color:#8494b0; margin-top:50px; text-indent:0;">该章节正在紧锣密鼓地撰写中...<br><br><span style="font-size:0.9rem; opacity:0.7;">作者正在努力码字，敬请期待！</span></p>`;
             }
 
-            // 显示阅读器
             readerView.classList.add('active');
-            readerView.scrollTop = 0; // 每次打开滚动到最上面
+            readerView.scrollTop = 0;
         }
 
-        // 关闭阅读器，返回目录
         function closeReader() {
             readerView.classList.remove('active');
         }
