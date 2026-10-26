@@ -12,46 +12,76 @@
             background-image: radial-gradient(circle at center, #0a1228 0%, #020411 80%);
             color: #e2e8f0;
             font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            height: 100vh;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
         /* ========== 顶部导航栏 ========== */
         .top-navbar {
             position: fixed; top: 0; left: 0; width: 100%; height: 60px;
-            display: flex; justify-content: space-between; align-items: center; padding: 0 40px;
-            background: rgba(2, 4, 17, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            display: flex; justify-content: space-between; align-items: center; padding: 0 20px;
+            background: rgba(2, 4, 17, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(148, 163, 184, 0.15); z-index: 1000;
         }
-        .nav-logo { font-size: 1.1rem; font-weight: 600; color: #e2e8f0; letter-spacing: 2px; }
+        .nav-logo { font-size: 1rem; font-weight: 600; color: #e2e8f0; letter-spacing: 2px; }
         .back-btn {
-            color: #94a3b8; text-decoration: none; font-size: 0.95rem; letter-spacing: 1px;
+            color: #94a3b8; text-decoration: none; font-size: 0.9rem; letter-spacing: 1px;
             padding: 6px 16px; border-radius: 20px; transition: all 0.3s ease; border: 1px solid transparent;
         }
-        .back-btn:hover { color: #ffffff; background: rgba(148, 163, 184, 0.1); border-color: rgba(148, 163, 184, 0.3); box-shadow: 0 0 15px rgba(148, 163, 184, 0.2); }
+        .back-btn:hover { color: #ffffff; background: rgba(148, 163, 184, 0.1); border-color: rgba(148, 163, 184, 0.3); }
 
-        /* ========== 核心舞台 ========== */
-        .stage {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%; height: 100%;
-            max-width: 1400px; max-height: 900px;
-            overflow: hidden;
+        /* =========================================
+           核心画布 (桌面与手机通用)
+           ========================================= */
+        .map-wrapper {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden; /* 桌面端不滚动 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 60px; /* 留出导航栏高度 */
+        }
+
+        /* 内部蓝图，固定比例，通过 JS 缩放适配屏幕 */
+        .blueprint {
+            position: relative;
+            width: 1000px;
+            height: 1300px; /* 纵向长卷比例 */
+            transform-origin: center center;
+        }
+
+        /* 手机端允许上下滑动查看整个星图长卷 */
+        @media (max-width: 768px) {
+            body { overflow-y: auto; }
+            .map-wrapper {
+                height: auto;
+                min-height: 100vh;
+                overflow: visible;
+                display: block;
+                padding-top: 80px;
+                padding-bottom: 50px;
+            }
+            .blueprint {
+                /* 手机端宽度铺满，高度自适应，允许在页面内直接纵向滚动 */
+                width: 100%;
+                height: 1200px; 
+                transform: none !important; /* 取消 JS 缩放，直接铺满 */
+            }
         }
 
         /* ========== 地球节点 ========== */
         .earth {
             position: absolute;
-            width: 180px; height: 180px;
+            width: 160px; height: 160px;
             border-radius: 50%;
             border: 1.5px solid #6e7bd1;
             box-shadow: 0 0 30px rgba(110, 123, 209, 0.4), inset 0 0 20px rgba(110, 123, 209, 0.2);
-            background: rgba(15, 25, 45, 0.6);
+            background: rgba(15, 25, 45, 0.8);
             backdrop-filter: blur(8px);
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             text-align: center;
-            font-size: 1.1rem; color: #d0e0ff; line-height: 1.8; letter-spacing: 2px;
+            font-size: 1rem; color: #d0e0ff; line-height: 1.6; letter-spacing: 2px;
             cursor: pointer; z-index: 10;
             /* 初始居中 */
             top: 50%; left: 50%;
@@ -59,11 +89,16 @@
             transition: all 1s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
+        /* 手机端初始位置调整 */
+        @media (max-width: 768px) {
+            .earth { top: 40%; left: 50%; width: 140px; height: 140px; }
+        }
+
         /* 提示点击的呼吸灯 */
         .earth::after {
             content: '点击展开';
-            position: absolute; bottom: -40px;
-            font-size: 0.85rem; color: #6e7bd1; letter-spacing: 3px;
+            position: absolute; bottom: -35px;
+            font-size: 0.8rem; color: #6e7bd1; letter-spacing: 3px;
             opacity: 0.8; animation: pulse 2s infinite; font-style: italic;
         }
         @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
@@ -75,10 +110,14 @@
 
         /* ⭐️ 展开后的地球位置 (飞到左上角) ⭐️ */
         .expanded .earth {
-            top: 15%; left: 18%;
-            transform: translate(-50%, -50%) scale(0.65);
+            top: 10%; left: 18%;
+            transform: translate(-50%, -50%) scale(0.6);
         }
         .expanded .earth::after { display: none; }
+
+        @media (max-width: 768px) {
+            .expanded .earth { top: 8%; left: 25%; transform: translate(-50%, -50%) scale(0.7); }
+        }
 
 
         /* ========== SVG 射线层 ========== */
@@ -89,12 +128,11 @@
         .line {
             stroke: rgba(110, 123, 209, 0.5); stroke-width: 1.5; fill: none;
             stroke-dasharray: 2000; stroke-dashoffset: 2000;
-            transition: stroke-dashoffset 2s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: stroke-dashoffset 2.5s cubic-bezier(0.25, 1, 0.5, 1);
         }
         .expanded .line { stroke-dashoffset: 0; }
 
-
-        /* ========== 内容节点 (绝对定位) ========== */
+        /* ========== 内容节点 ========== */
         .node-item {
             position: absolute; opacity: 0; transform: translateY(15px);
             transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
@@ -103,21 +141,25 @@
         .expanded .node-item { opacity: 1; transform: translateY(0); }
 
         /* 文字节点 */
-        .txt-reality { top: 25%; left: 55%; font-size: 1.2rem; color: #a0b4e0; letter-spacing: 2px; }
-        .txt-virtual { top: 35%; left: 45%; font-size: 1.2rem; letter-spacing: 2px; }
+        .txt-reality { top: 18%; left: 50%; font-size: 1.1rem; color: #a0b4e0; letter-spacing: 2px; }
+        .txt-virtual { top: 25%; left: 40%; font-size: 1.1rem; letter-spacing: 2px; }
 
         /* 时之河 (左侧) */
         .time-flow {
-            position: absolute; top: 40%; left: 22%;
+            position: absolute; top: 35%; left: 20%;
             display: flex; gap: 15px;
             opacity: 0; transform: translateX(-20px); transition: all 1s ease; z-index: 2;
         }
         .expanded .time-flow { opacity: 1; transform: translateX(0); }
         .time-flow span {
-            writing-mode: vertical-lr; font-size: 1.4rem; letter-spacing: 10px;
+            writing-mode: vertical-lr; font-size: 1.3rem; letter-spacing: 10px;
             color: #6e7bd1; text-shadow: 0 0 15px rgba(110, 123, 209, 0.4);
         }
         .time-flow span:last-child { color: #4a5a8a; margin-top: 40px; }
+
+        @media (max-width: 768px) {
+            .time-flow { top: 30%; left: 15%; }
+        }
 
         /* 毛玻璃框 */
         .glass-box {
@@ -125,20 +167,20 @@
             backdrop-filter: blur(8px); border: 1px solid rgba(110, 123, 209, 0.4);
             border-radius: 10px; display: flex; flex-direction: column;
             justify-content: center; align-items: center; text-align: center;
-            color: #b0c4de; font-size: 1rem; line-height: 1.6; box-shadow: 0 0 20px rgba(110, 123, 209, 0.1);
+            color: #b0c4de; font-size: 0.95rem; line-height: 1.6; box-shadow: 0 0 20px rgba(110, 123, 209, 0.1);
             opacity: 0; transform: scale(0.9); transition: all 0.8s ease; z-index: 2;
         }
         .expanded .glass-box { opacity: 1; transform: scale(1); }
 
-        .box-kt12 { top: 42%; right: 15%; width: 200px; height: 120px; border-radius: 10px 50% 50% 10px; }
-        .box-memory { top: 65%; right: 30%; width: 130px; height: 60px; border-radius: 30px; }
+        .box-kt12 { top: 35%; right: 15%; width: 180px; height: 110px; border-radius: 10px 50% 50% 10px; }
+        .box-memory { top: 55%; right: 25%; width: 120px; height: 50px; border-radius: 25px; }
 
         /* 万象唯幕层 */
         .curtain {
-            position: absolute; top: 75%; left: 18%; right: 15%; height: 40px;
+            position: absolute; top: 70%; left: 15%; right: 15%; height: 35px;
             background: rgba(20, 30, 60, 0.8); border: 1px solid rgba(110, 123, 209, 0.5);
             border-radius: 20px; display: flex; justify-content: center; align-items: center;
-            color: #8a9be0; letter-spacing: 5px; font-size: 0.9rem;
+            color: #8a9be0; letter-spacing: 5px; font-size: 0.85rem;
             box-shadow: 0 0 30px rgba(110, 123, 209, 0.2);
             opacity: 0; transition: all 0.8s ease; z-index: 2;
         }
@@ -146,23 +188,24 @@
 
         /* 通行口 */
         .gate {
-            position: absolute; width: 120px; height: 30px;
+            position: absolute; width: 110px; height: 25px;
             background: rgba(10, 15, 30, 0.9); border: 1px solid rgba(110, 123, 209, 0.6);
             border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            font-size: 0.8rem; color: #b0c4de; letter-spacing: 1px;
+            font-size: 0.75rem; color: #b0c4de; letter-spacing: 1px;
             opacity: 0; transition: all 0.8s ease; z-index: 3;
         }
         .expanded .gate { opacity: 1; }
-        .gate-top { top: 71%; left: 45%; }
-        .gate-bottom { top: 81%; left: 45%; }
+        .gate-top { top: 66%; left: 45%; }
+        .gate-bottom { top: 77%; left: 45%; }
 
         /* 主大陆 */
         .mainland {
-            position: absolute; bottom: -80px; left: 18%; right: 15%; height: 250px;
+            position: absolute; bottom: 0; left: 15%; right: 15%; height: 250px;
             border-radius: 50% 50% 0 0; border: 1px solid rgba(110, 123, 209, 0.4);
             border-bottom: none; display: flex; justify-content: center; align-items: flex-start; padding-top: 30px;
-            color: #6e7bd1; font-size: 1.5rem; letter-spacing: 10px;
+            color: #6e7bd1; font-size: 1.4rem; letter-spacing: 10px;
             opacity: 0; transition: all 1s ease; z-index: 1;
+            background: radial-gradient(ellipse at bottom, rgba(110,123,209,0.05) 0%, transparent 70%);
         }
         .expanded .mainland { opacity: 1; }
 
@@ -177,60 +220,6 @@
         .expanded .gate-bottom { transition-delay: 2.3s; }
         .expanded .mainland { transition-delay: 2.5s; }
 
-
-        /* ========== 手机端适配 (转为纵向瀑布流) ========== */
-        @media (max-width: 768px) {
-            body { overflow-y: auto; height: auto; min-height: 100vh; }
-            
-            .stage {
-                position: relative; top: auto; left: auto;
-                transform: none; width: 100%; min-height: 100vh;
-                display: flex; flex-direction: column; align-items: center;
-                padding: 100px 20px 60px; overflow: visible;
-            }
-
-            /* 隐藏复杂的射线，靠卡片间距表达层级 */
-            .map-lines { display: none; }
-
-            /* 地球节点 */
-            .earth {
-                position: relative; top: auto; left: auto;
-                transform: scale(1); margin-bottom: 40px;
-            }
-            .expanded .earth {
-                position: relative; top: auto; left: auto;
-                transform: scale(0.8); margin-bottom: 20px;
-            }
-
-            /* 将所有绝对定位改成相对定位，变成流式排版 */
-            .node-item, .time-flow, .glass-box, .gate, .curtain, .mainland {
-                position: relative; top: auto; left: auto; right: auto; bottom: auto;
-                opacity: 0; transform: translateY(20px); transition: all 0.6s ease;
-                margin-bottom: 20px; width: 100%; max-width: 350px; text-align: center;
-            }
-
-            /* 展开后的显示 */
-            .expanded .node-item, .expanded .time-flow, .expanded .glass-box, 
-            .expanded .gate, .expanded .curtain, .expanded .mainland {
-                opacity: 1; transform: translateY(0);
-            }
-
-            /* 样式重置为纵向卡片 */
-            .txt-reality, .txt-virtual { font-size: 1.1rem; padding: 10px; border-bottom: 1px dashed rgba(110,123,209,0.2); }
-            
-            .time-flow { display: block; background: rgba(15,25,45,0.5); padding: 15px; border-radius: 10px; border: 1px solid rgba(110,123,209,0.3);}
-            .time-flow span { writing-mode: horizontal-tb; font-size: 1.1rem; display: inline-block; margin: 0 10px; }
-            .time-flow span:last-child { margin-top: 0; }
-            
-            .box-kt12 { height: auto; padding: 20px; border-radius: 10px; }
-            .box-memory { height: auto; padding: 15px; border-radius: 30px; }
-            
-            .curtain { height: 40px; padding: 0; border-radius: 20px;}
-            
-            .gate { height: 30px; padding: 0; width: 150px; margin-left: auto; margin-right: auto;}
-            
-            .mainland { height: auto; padding: 30px 20px; border-radius: 20px; border: 1px solid rgba(110,123,209,0.4); font-size: 1.2rem;}
-        }
     </style>
 </head>
 <body>
@@ -240,63 +229,65 @@
         <a href="index.html" class="back-btn">← 返回首页</a>
     </header>
 
-    <div class="stage" id="stage">
-        
-        <!-- ⭐️ SVG 射线层 (匹配大屏位置) ⭐️ -->
-        <svg class="map-lines" viewBox="0 0 1000 1000" preserveAspectRatio="none">
-            <!-- 起点定为地球飞过去的坐标 (约 left:18%, top:15% -> 即 x=180, y=150) -->
-            <!-- 现实 -->
-            <line x1="180" y1="150" x2="600" y2="250" class="line" />
-            <!-- 虚拟 -->
-            <line x1="180" y1="150" x2="500" y2="350" class="line" />
-            <!-- 连向 KT12 (right:15%, top:42% -> x=850, y=420) -->
-            <line x1="180" y1="150" x2="800" y2="420" class="line" />
-            <!-- 连向 记忆之庭 (right:30%, top:65% -> x=700, y=650) -->
-            <line x1="180" y1="150" x2="700" y2="650" class="line" />
-            <!-- 贯穿唯幕层的纵线 -->
-            <line x1="180" y1="150" x2="180" y2="750" class="line" />
+    <div class="map-wrapper">
+        <div class="stage blueprint" id="stage">
             
-            <!-- 时之河 (双螺旋波动) -->
-            <path d="M 180 150 Q 280 400 180 550 T 180 850" class="line" />
-            <path d="M 180 150 Q 80 400 180 550 T 180 850" class="line" opacity="0.4" />
-        </svg>
+            <!-- SVG 射线层 (坐标适配 1000x1300 的画布) -->
+            <svg class="map-lines" viewBox="0 0 1000 1300" preserveAspectRatio="none">
+                <!-- 起点定为地球飞过去的坐标 (约 left:18%, top:10% -> 即 x=180, y=130) -->
+                <!-- 现实 (向右上) -->
+                <line x1="180" y1="130" x2="550" y2="234" class="line" />
+                <!-- 虚拟 (向右下) -->
+                <line x1="180" y1="130" x2="450" y2="325" class="line" />
+                <!-- 连向 KT12 (right:15%, top:35% -> x=850, y=455) -->
+                <line x1="180" y1="130" x2="800" y2="455" class="line" />
+                <!-- 连向 记忆之庭 (right:25%, top:55% -> x=750, y=715) -->
+                <line x1="180" y1="130" x2="700" y2="715" class="line" />
+                <!-- 贯穿唯幕层的纵线 -->
+                <line x1="180" y1="130" x2="180" y2="910" class="line" />
+                
+                <!-- 时之河 (双螺旋波动) -->
+                <path d="M 180 130 Q 280 450 180 650 T 180 1050" class="line" />
+                <path d="M 180 130 Q 80 450 180 650 T 180 1050" class="line" opacity="0.4" />
+            </svg>
 
-        <!-- 起源节点 -->
-        <div class="earth" id="earth" onclick="toggleMap()">
-            <span>地球</span>
-            <span>本征世界</span>
-            <span>源初之界</span>
+            <!-- 起源节点 -->
+            <div class="earth" id="earth" onclick="toggleMap()">
+                <span>地球</span>
+                <span>本征世界</span>
+                <span>源初之界</span>
+            </div>
+
+            <!-- 文本节点 -->
+            <div class="node-item txt-reality">现实</div>
+            <div class="node-item txt-virtual">虚拟</div>
+            
+            <!-- 时之河 -->
+            <div class="time-flow">
+                <span>时间流</span>
+                <span>时之河</span>
+            </div>
+
+            <!-- 玻璃框节点 -->
+            <div class="glass-box box-kt12">
+                <span>KT12</span>
+                <span>可特十二实验场</span>
+                <span>十二刻</span>
+            </div>
+            
+            <div class="glass-box box-memory">
+                <span>记忆之庭</span>
+            </div>
+
+            <!-- 唯幕层与通行口 -->
+            <div class="gate gate-top">万象通行口</div>
+            <div class="curtain">万象唯幕层</div>
+            <div class="gate gate-bottom">万象通行口</div>
+
+            <!-- 主大陆 -->
+            <div class="mainland">主大陆</div>
+
         </div>
-
-        <!-- 文本节点 -->
-        <div class="node-item txt-reality">现实</div>
-        <div class="node-item txt-virtual">虚拟</div>
-        
-        <!-- 时之河 -->
-        <div class="time-flow">
-            <span>时间流</span>
-            <span>时之河</span>
-        </div>
-
-        <!-- 玻璃框节点 -->
-        <div class="glass-box box-kt12">
-            <span>KT12</span>
-            <span>可特十二实验场</span>
-            <span>十二刻</span>
-        </div>
-        
-        <div class="glass-box box-memory">
-            <span>记忆之庭</span>
-        </div>
-
-        <!-- 唯幕层与通行口 -->
-        <div class="gate gate-top">万象通行口</div>
-        <div class="curtain">万象唯幕层</div>
-        <div class="gate gate-bottom">万象通行口</div>
-
-        <!-- 主大陆 -->
-        <div class="mainland">主大陆</div>
-
     </div>
 
     <script>
@@ -312,6 +303,22 @@
                 stage.classList.remove('expanded');
             }
         }
+
+        // 桌面端等比缩放逻辑，保证不超出屏幕高度
+        function resizeBlueprint() {
+            const stage = document.getElementById('stage');
+            if (window.innerWidth > 768) {
+                const scaleX = window.innerWidth / 1000;
+                const scaleY = (window.innerHeight - 60) / 1300; 
+                const scale = Math.min(scaleX, scaleY, 1); // 保持比例缩放
+                stage.style.transform = `scale(${scale})`;
+            } else {
+                stage.style.transform = `none`;
+            }
+        }
+        
+        window.addEventListener('resize', resizeBlueprint);
+        window.addEventListener('DOMContentLoaded', resizeBlueprint);
     </script>
 </body>
 </html>
