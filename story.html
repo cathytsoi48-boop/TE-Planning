@@ -92,7 +92,7 @@
         }
         .row-label:hover { color: #ffffff; }
         .row-label.open { color: #ffffff; text-shadow: 0 0 15px rgba(255, 255, 255, 0.6); }
-        .row-label.highlight { color: #6e7bd1; text-shadow: 0 0 15px rgba(110, 123, 209, 0.4); } /* 第2季默认高亮 */
+        .row-label.highlight { color: #6e7bd1; text-shadow: 0 0 15px rgba(110, 123, 209, 0.4); }
         
         .season-arrow { font-size: 0.9rem; margin-top: 10px; color: #6e7bd1; transition: transform 0.3s ease; }
         .row-label.open .season-arrow { transform: rotate(180deg); }
@@ -120,7 +120,7 @@
 
         /* 章节条目 */
         .episode-item {
-            font-size: 1.05rem; color: #4a5a7a; /* 颜色更暗，表示未更新 */
+            font-size: 1.05rem; color: #4a5a7a;
             display: flex; align-items: center;
             transition: all 0.3s; cursor: pointer;
         }
@@ -247,7 +247,6 @@
             
             <div class="season-content-wrapper" id="season-1-content">
                 <div class="row-content">
-                    
                     <div class="toggle-item" onclick="toggleChapters('grid-1', this)">
                         · 1-12 沉染底色 <span class="toggle-arrow">▼</span>
                     </div>
@@ -271,7 +270,7 @@
                         </div>
                     </div>
 
-                    <!-- 下方大纲 -->
+                    <!-- 第一季大纲 -->
                     <div class="outline-text">· 12-16 环星大赛</div>
                     <div class="outline-text">· 16-26 命運织之羁绊</div>
                     <div class="outline-text">· 26-30 迷失与解离如梦魇</div>
@@ -279,7 +278,7 @@
             </div>
         </div>
 
-        <!-- ⭐️ 第2季 (更新内容) ⭐️ -->
+        <!-- ⭐️ 第2季 (已更新集数) ⭐️ -->
         <div class="list-row" id="row-2">
             <div class="row-label highlight" onclick="toggleSeason('season-2-content', this)">
                 第2季 <span class="season-arrow">▼</span>
@@ -287,10 +286,9 @@
             
             <div class="season-content-wrapper" id="season-2-content">
                 <div class="row-content">
-                    <!-- 第二季的大纲列表 -->
-                    <div class="outline-text">· 1-10 重组</div>
-                    <div class="outline-text">· 11-15 克莱因.一</div>
-                    <div class="outline-text">· 16-30 星际航行学院.一</div>
+                    <div class="outline-text">· 1-18 重组</div>
+                    <div class="outline-text">· 18-20 克莱因.一</div>
+                    <div class="outline-text">· 21-30 星际航行学院.一</div>
                     <div class="outline-text">· 31-40 解息.一</div>
                     <div class="outline-text">· 40-55 融合刻</div>
                     <div class="outline-text">· 56-60 地球.一</div>
@@ -298,8 +296,23 @@
             </div>
         </div>
 
-        <!-- 第3~5季 (纯占位) -->
-        <div class="list-row" id="row-3"><div class="row-label">第3季</div></div>
+        <!-- ⭐️ 第3季 (最新加入) ⭐️ -->
+        <div class="list-row" id="row-3">
+            <div class="row-label" onclick="toggleSeason('season-3-content', this)">
+                第3季 <span class="season-arrow">▼</span>
+            </div>
+            
+            <div class="season-content-wrapper" id="season-3-content">
+                <div class="row-content">
+                    <div class="outline-text">· 1-12 星际航行学院.二</div>
+                    <div class="outline-text">· 13-20 晨.一</div>
+                    <div class="outline-text">· 21-30 生命非永恒性</div>
+                    <div class="outline-text">· 31-40 古文明.启</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第4~5季 (纯占位，留给你以后加) -->
         <div class="list-row" id="row-4"><div class="row-label">第4季</div></div>
         <div class="list-row" id="row-5"><div class="row-label">第5季</div></div>
     </div>
@@ -359,7 +372,6 @@
         const readerMainTitle = document.getElementById('reader-main-title');
         const readerTopTitle = document.getElementById('reader-top-title');
 
-        // 第一集正文
         const chapter1Text = `
             <p>我还记得那一平淡的仲夏夜，我刚赶完午夜末班车回到家，正欲洗去身上的疲惫，躺在床上准备刷会小说。不知道是什么虫子在窗外发出烦人的嗡嗡声，正值炎暑开启的冷气也无法盖过它们声音。慢慢的困了，不知道什么时候睡着了，再次睁开眼睛就到了一个陌生的地方。</p>
             
