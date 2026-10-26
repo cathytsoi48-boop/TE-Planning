@@ -74,14 +74,13 @@
         .nav-start-btn:hover .nav-start-cn { text-shadow: 0 0 25px #ffffff, 0 0 40px #6a9eff; transform: scale(1.05); }
         .nav-start-btn:hover .nav-start-en { color: #ffffff; text-shadow: 0 0 10px #aaccff; }
 
-        /* 右侧波浪菜单区 (只剩5个) */
+        /* 右侧波浪菜单区 (5个) */
         .nav-links { display: flex; align-items: flex-start; gap: 8px; height: 90px; position: relative; }
         .nav-item { position: relative; text-decoration: none; display: flex; justify-content: center; align-items: center; padding: 10px 12px; transition: all 0.3s ease; transform: translateY(0); cursor: pointer; }
         .nav-text { font-size: 1.05rem; font-weight: 600; color: #a4b0e0; letter-spacing: 1px; transition: all 0.3s ease; z-index: 2; }
         
         .nav-item::after { content: ''; position: absolute; width: 1px; background: rgba(255, 255, 255, 0.4); box-shadow: 0 0 8px rgba(164, 176, 224, 0.6); transition: all 0.3s ease; z-index: 1; }
         
-        /* 重新分配5个菜单的高低和线条 */
         .wave-1::after { left: -5px; top: 20px; height: 50px; } 
         .wave-2::after { right: -5px; bottom: 20px; height: 70px; } 
         .wave-3::after { left: -5px; top: 40px; height: 40px; } 
@@ -194,18 +193,14 @@
         .animate-slice { animation: fadeInOut 1.2s ease-in-out forwards; }
         @keyframes fadeInOut { 0% { background: rgba(0,0,0,0); } 50% { background: rgba(0,0,0,1); } 100% { background: rgba(0,0,0,1); } }
 
-        /* =========================================
-           ⭐️ 全新返回转场 (极简黑屏渐隐) ⭐️
-           ========================================= */
+        /* 返回转场 (极简黑屏渐隐) */
         #fade-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000000; z-index: 9999; 
             display: block; opacity: 0; pointer-events: none;
-            transition: opacity 0.4s ease; /* 渐隐动画时长 */
+            transition: opacity 0.4s ease;
         }
-        #fade-overlay.show {
-            opacity: 1; pointer-events: auto;
-        }
+        #fade-overlay.show { opacity: 1; pointer-events: auto; }
 
         /* 模态框 */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 5, 15, 0.75); backdrop-filter: blur(12px); display: flex; justify-content: center; align-items: center; visibility: hidden; opacity: 0; transition: 0.3s; z-index: 2000; }
@@ -241,7 +236,7 @@
 </head>
 <body>
 
-    <!-- ⭐️ 隐藏的音效标签 (请确保上传了 start.mp3) ⭐️ -->
+    <!-- 隐藏的音效标签 -->
     <audio id="startSound" src="start.mp3" preload="auto"></audio>
 
     <!-- 全局背景与特效 -->
@@ -263,9 +258,10 @@
                 <span class="nav-start-en">START</span>
             </a>
 
+            <!-- ⭐️ 修改了这里的“地区”链接 ⭐️ -->
             <div class="nav-links">
                 <a href="javascript:void(0)" class="nav-item wave-1" onclick="switchView('home')"><span class="nav-text">首页</span></a>
-                <a href="javascript:void(0)" class="nav-item wave-2" onclick="switchView('home')"><span class="nav-text">地区</span></a>
+                <a href="region.html" class="nav-item wave-2"><span class="nav-text">地区</span></a>
                 <a href="javascript:void(0)" class="nav-item wave-3" onclick="switchView('character')"><span class="nav-text">角色</span></a>
                 <a href="story.html" class="nav-item wave-4"><span class="nav-text">剧情</span></a>
                 <a href="javascript:void(0)" class="nav-item wave-5" onclick="switchView('home')"><span class="nav-text">作者</span></a>
@@ -340,11 +336,11 @@
         </div>
 
         <div class="explore-options">
-            <div class="explore-item" onclick="alert('这里之后可以跳转到对应的页面！')">
+            <div class="explore-item" onclick="window.location.href='story.html'">
                 <div class="explore-cn">企划</div>
                 <div class="explore-en">project</div>
             </div>
-            <div class="explore-item" onclick="alert('这里之后可以跳转到对应的页面！')">
+            <div class="explore-item" onclick="window.location.href='story.html'">
                 <div class="explore-cn">小说与世界观</div>
                 <div class="explore-en">stories and worldbuilding</div>
             </div>
@@ -361,7 +357,7 @@
         <div class="slice-line right"></div>
     </div>
 
-    <!-- ⭐️ 全新极简黑屏转场遮罩 ⭐️ -->
+    <!-- 返回转场遮罩 -->
     <div id="fade-overlay"></div>
 
     <!-- 角色弹窗 -->
@@ -442,7 +438,7 @@
         const explorePage = document.getElementById('page-explore');
         const fadeOverlay = document.getElementById('fade-overlay');
 
-        // 进入探索页 (斜线切割)
+        // 进入探索页
         function triggerTransition() {
             // 播放音效
             const sound = document.getElementById('startSound');
@@ -466,21 +462,16 @@
             }, 1200);
         }
 
-        // ⭐️ 返回主页 (极简黑屏渐隐，绝对不卡 Bug) ⭐️
+        // 返回主页 (极简黑屏渐隐)
         function closeExplore() {
-            // 1. 黑屏淡入
             fadeOverlay.classList.add('show');
 
-            // 2. 等屏幕彻底变黑（0.4秒后），切换回主页
             setTimeout(() => {
                 explorePage.classList.remove('show');
                 window.scrollTo(0, 0);
-
-                // 3. 再停顿 100 毫秒，让主页渲染一下，然后黑屏淡出
                 setTimeout(() => {
                     fadeOverlay.classList.remove('show');
                 }, 100);
-
             }, 400);
         }
 
