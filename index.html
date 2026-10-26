@@ -3,404 +3,538 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>剧情 - 万象企划</title>
+    <title>万象企划</title>
+    <meta name="description" content="在真实的地球上，存放着一个名为「万象卷」的浩瀚异世界。">
     
     <style>
         /* ========== 全局样式 ========== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
+            font-family: 'Segoe UI', 'Poppins', 'Microsoft YaHei', sans-serif;
             background-color: #020411;
-            background-image: radial-gradient(circle at 15% 15%, rgba(30, 45, 90, 0.4) 0%, transparent 60%);
-            color: #e2e8f0;
-            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            color: #e0e8ff;
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
         }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #020411; }
+        ::-webkit-scrollbar-thumb { background: #2a3a6a; border-radius: 10px; }
 
-        /* ========== 顶部导航栏 ========== */
-        .top-navbar {
-            position: fixed; top: 0; left: 0; width: 100%; height: 60px;
-            display: flex; justify-content: space-between; align-items: center; padding: 0 40px;
-            background: rgba(2, 4, 17, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(148, 163, 184, 0.15); z-index: 100;
+        /* 背景层 */
+        .starry-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background-image: url('bg.png');
+            background-size: cover; background-position: center; background-repeat: no-repeat;
+            z-index: 0; pointer-events: none; transition: opacity 0.1s linear;
+            box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.7);
         }
-        .nav-logo { font-size: 1.1rem; font-weight: 600; color: #e2e8f0; letter-spacing: 2px; }
-        .back-btn {
-            color: #94a3b8; text-decoration: none; font-size: 0.95rem; letter-spacing: 1px;
-            padding: 6px 16px; border-radius: 20px; transition: all 0.3s ease; border: 1px solid transparent;
+        .bg-fade-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background: linear-gradient(to bottom, transparent 0%, #020411 90%);
+            z-index: 1; pointer-events: none; opacity: 0;
         }
-        .back-btn:hover { color: #ffffff; background: rgba(148, 163, 184, 0.1); border-color: rgba(148, 163, 184, 0.3); }
-
-        /* ========== 左侧星轨悬垂菜单 ========== */
-        .main-container { display: flex; margin-top: 60px; min-height: calc(100vh - 60px); position: relative; z-index: 10; }
-        .sidebar { width: 320px; padding: 60px 20px 60px 80px; position: relative; }
-        .content-area { flex: 1; padding: 60px; }
-        .menu-group { display: flex; flex-direction: column; gap: 25px; }
-        .menu-group.large-gap { margin-top: 90px; }
-        .menu-item { position: relative; display: flex; align-items: center; text-decoration: none; padding: 10px 0; width: max-content; transition: all 0.3s ease; cursor: pointer; }
-        .menu-text { font-size: 1.15rem; color: #94a3b8; letter-spacing: 2px; margin-left: 35px; transition: all 0.3s ease; z-index: 2; }
-        .menu-item::before {
-            content: ''; position: absolute; left: 10px; width: 1px; background-color: #94a3b8;
-            transition: all 0.4s ease; z-index: 1; bottom: calc(50% + 5px);
-        }
-        .menu-item::after {
-            content: ''; position: absolute; left: 6.5px; bottom: calc(50% - 3.5px);
-            width: 7px; height: 7px; border: 1px solid #94a3b8; transform: rotate(45deg);
-            transition: all 0.4s ease; z-index: 2; background-color: transparent;
-        }
-        .menu-item.long-line::before { top: -1000px; }
-        .menu-item.short-line::before { top: calc(50% - 50px); }
-        .menu-item:hover .menu-text { color: #ffffff; text-shadow: 0 0 10px rgba(255, 255, 255, 0.6); }
-        .menu-item:hover::before { background-color: #ffffff; box-shadow: 0 0 8px #ffffff, 0 0 15px #94a3b8; }
-        .menu-item:hover::after { border-color: #ffffff; box-shadow: 0 0 8px #ffffff, 0 0 15px #94a3b8; transform: rotate(45deg) scale(1.2); }
-
-        /* =========================================
-           主线展开视图 (全屏层)
-           ========================================= */
-        #main-story-view {
+        #sakuraCanvas {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #060a17;
-            background-image: radial-gradient(circle at center, #0e1735 0%, #020411 100%);
-            z-index: 999;
-            overflow-y: auto;
-            visibility: hidden;
-            opacity: 0;
-            transition: opacity 0.5s ease, visibility 0.5s;
-            padding: 80px 10vw; 
-            display: flex;
-            flex-direction: column;
+            pointer-events: none; z-index: 1000; opacity: 0.8;
         }
 
-        #main-story-view.active {
-            visibility: visible;
-            opacity: 1;
+        .main-container {
+            max-width: 1300px; margin: 0 auto; padding: 20px 30px 60px;
+            position: relative; z-index: 10;
         }
 
-        /* 关闭按钮 */
-        .close-story-btn {
-            position: absolute; top: 25px; right: 40px;
-            color: #7b8cde; font-size: 1rem; cursor: pointer;
-            padding: 8px 20px; border: 1px solid rgba(123, 140, 222, 0.3);
-            border-radius: 30px; transition: all 0.3s; background: rgba(10, 20, 40, 0.5);
+        /* ========== 导航栏 ========== */
+        .navbar {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(10, 20, 40, 0.65); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+            border-radius: 20px; padding: 15px 40px; margin: 20px 0 40px; 
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), 0 0 30px rgba(100, 150, 255, 0.15);
+            border: 1px solid rgba(150, 180, 255, 0.25); position: relative; z-index: 20;
         }
-        .close-story-btn:hover {
-            color: #ffffff; background: rgba(123, 140, 222, 0.2);
-            box-shadow: 0 0 15px rgba(123, 140, 222, 0.4);
+        .logo { display: flex; flex-direction: column; line-height: 1.1; }
+        .logo-cn { font-size: 1.8rem; font-weight: 800; color: #a4b0e0; letter-spacing: 2px; }
+        .logo-en { font-size: 1.4rem; font-weight: 700; color: #a4b0e0; letter-spacing: 1px; }
+        .logo-sub { font-size: 0.9rem; color: #6a7baa; margin-top: 4px; letter-spacing: 0.5px; }
+        
+        /* 居中“开始”按钮 */
+        .nav-start-btn {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-decoration: none; cursor: pointer; margin: 0 30px; transition: all 0.3s ease;
         }
+        .nav-start-cn {
+            font-size: 2rem; font-weight: 800; color: #ffffff; letter-spacing: 5px;
+            text-shadow: 0 0 15px #6a9eff; transition: all 0.3s ease; line-height: 1.1;
+        }
+        .nav-start-en {
+            font-family: 'Georgia', serif; font-style: italic; font-size: 1.1rem;
+            color: #a4b0e0; letter-spacing: 4px; margin-top: 2px; transition: all 0.3s ease;
+        }
+        .nav-start-btn:hover .nav-start-cn { text-shadow: 0 0 25px #ffffff, 0 0 40px #6a9eff; transform: scale(1.05); }
+        .nav-start-btn:hover .nav-start-en { color: #ffffff; text-shadow: 0 0 10px #aaccff; }
 
-        /* 头部标题 */
-        .story-header {
-            display: flex; align-items: center; gap: 15px;
-            margin-bottom: 60px; font-size: 3rem; font-weight: 300; letter-spacing: 4px;
+        /* 右侧波浪菜单区 (只剩5个) */
+        .nav-links { display: flex; align-items: flex-start; gap: 8px; height: 90px; position: relative; }
+        .nav-item { position: relative; text-decoration: none; display: flex; justify-content: center; align-items: center; padding: 10px 12px; transition: all 0.3s ease; transform: translateY(0); cursor: pointer; }
+        .nav-text { font-size: 1.05rem; font-weight: 600; color: #a4b0e0; letter-spacing: 1px; transition: all 0.3s ease; z-index: 2; }
+        
+        .nav-item::after { content: ''; position: absolute; width: 1px; background: rgba(255, 255, 255, 0.4); box-shadow: 0 0 8px rgba(164, 176, 224, 0.6); transition: all 0.3s ease; z-index: 1; }
+        
+        /* 重新分配5个菜单的高低和线条 */
+        .wave-1::after { left: -5px; top: 20px; height: 50px; } 
+        .wave-2::after { right: -5px; bottom: 20px; height: 70px; } 
+        .wave-3::after { left: -5px; top: 40px; height: 40px; } 
+        .wave-4::after { right: -5px; top: 10px; height: 60px; } 
+        .wave-5::after { left: -5px; bottom: 10px; height: 50px; }
+        
+        .wave-1 { transform: translateY(15px); } 
+        .wave-2 { transform: translateY(45px); } 
+        .wave-3 { transform: translateY(30px); } 
+        .wave-4 { transform: translateY(5px); } 
+        .wave-5 { transform: translateY(35px); }
+
+        .nav-item:hover .nav-text { color: #ffffff; text-shadow: 0 0 10px #a4b0e0, 0 0 20px #6a9eff; }
+        .nav-item:hover::after { background: #ffffff; box-shadow: 0 0 15px #ffffff, 0 0 30px #6a9eff; }
+
+        /* ========== 视图容器 ========== */
+        .view-container { display: none; animation: fadeIn 0.5s ease forwards; }
+        .view-container.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ========== 简介区块 ========== */
+        .worldview-section { background: rgba(15, 25, 45, 0.7); backdrop-filter: blur(12px); border-radius: 50px; padding: 40px 50px; margin-bottom: 40px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7); border: 1px solid rgba(150, 180, 255, 0.2); position: relative; }
+        .worldview-section::before { content: "✨"; position: absolute; top: -20px; left: 40px; font-size: 3rem; opacity: 0.6; text-shadow: 0 0 20px #aaccff; }
+        .worldview-title { font-size: 2.2rem; color: #d0e0ff; margin-bottom: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .worldview-title span { background: rgba(40, 60, 110, 0.7); padding: 4px 18px; border-radius: 40px; font-size: 1rem; color: #b0c8ff; border: 1px solid rgba(150, 180, 255, 0.3); }
+        .worldview-text { font-size: 1.2rem; line-height: 1.9; color: #c8d4f0; text-indent: 2em; background: rgba(10, 20, 45, 0.5); padding: 20px 30px; border-radius: 30px; border-left: 8px solid #6a9eff; }
+
+        /* 巨大的 START 入口 */
+        .start-hero { display: flex; justify-content: center; align-items: center; height: 300px; margin-bottom: 50px; position: relative; cursor: pointer; }
+        .start-hero-content { display: flex; align-items: center; justify-content: center; gap: 20px; transition: transform 0.4s ease; }
+        .start-hero:hover .start-hero-content { transform: scale(1.05); }
+        .start-line { width: 2px; height: 200px; background: #ffffff; transform: rotate(35deg); box-shadow: 0 0 15px rgba(255, 255, 255, 0.8); transition: all 0.4s ease; }
+        .start-hero:hover .start-line { box-shadow: 0 0 30px #ffffff, 0 0 50px #6a9eff; height: 220px; }
+        .start-text-cn { font-size: 5rem; font-weight: 800; color: transparent; -webkit-text-stroke: 2px #ffffff; letter-spacing: 5px; text-shadow: 0 0 20px rgba(255, 255, 255, 0.2); }
+        .start-text-en { font-size: 4.5rem; font-weight: 800; color: transparent; -webkit-text-stroke: 2px #ffffff; letter-spacing: 5px; text-shadow: 0 0 20px rgba(255, 255, 255, 0.2); }
+
+        /* ========== 角色图鉴区块 ========== */
+        .gallery-section { margin-top: 20px; }
+        .section-header { display: flex; align-items: center; gap: 20px; margin-bottom: 40px; }
+        .section-header h2 { font-size: 2.4rem; background: linear-gradient(135deg, #aaccff, #ffffff); -webkit-background-clip: text; color: transparent; font-weight: 800; letter-spacing: 3px; }
+        .section-header .badge { background: rgba(30, 45, 80, 0.8); padding: 6px 20px; border-radius: 30px; color: #b8d0ff; font-weight: 600; border: 1px solid rgba(150, 180, 255, 0.3); }
+        .character-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 35px; justify-content: center; }
+        .character-card { background: rgba(18, 25, 45, 0.7); backdrop-filter: blur(12px); border-radius: 30px; padding: 25px 20px 20px; box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8); border: 2px solid rgba(130, 160, 255, 0.2); transition: all 0.35s; display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .character-card:hover { transform: scale(1.05) translateY(-8px); box-shadow: 0 30px 50px rgba(0, 0, 0, 0.9), 0 0 60px rgba(100, 160, 255, 0.4); border-color: rgba(180, 210, 255, 0.6); }
+        .character-avatar { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 5px solid rgba(100, 150, 255, 0.4); margin-bottom: 15px; background: #1a1e30; }
+        .character-name { font-size: 1.7rem; font-weight: 700; color: #d0e0ff; margin-bottom: 6px; }
+        .character-desc { font-size: 0.95rem; color: #a8b8d8; margin-bottom: 18px; }
+        .detail-btn { background: linear-gradient(145deg, #3a5a9a, #2a3a6a); border: 1px solid rgba(150, 190, 255, 0.4); color: #e0ecff; padding: 12px 30px; border-radius: 40px; cursor: pointer; transition: all 0.3s; }
+        .detail-btn:hover { background: linear-gradient(145deg, #4a6ab0, #3a4a8a); transform: scale(1.04); }
+
+        /* ========== 底部信息区块 ========== */
+        .footer-section { margin-top: 80px; padding-bottom: 50px; }
+        .footer-divider { display: flex; align-items: center; text-align: center; color: #c8d4f0; font-size: 1rem; margin-bottom: 50px; }
+        .footer-divider::before, .footer-divider::after { content: ''; flex: 1; border-bottom: 1px dashed rgba(150, 180, 255, 0.3); }
+        .footer-divider::before { margin-right: 20px; } .footer-divider::after { margin-left: 20px; }
+        .footer-content { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; text-align: left; }
+        .footer-col h3 { font-size: 1.4rem; color: #a4b0e0; margin-bottom: 15px; }
+        .author-name { font-size: 1.1rem; color: #d0e0ff; margin-bottom: 15px; }
+        .author-desc { font-size: 0.95rem; color: #94a3b8; line-height: 1.8; margin-bottom: 25px; }
+        .social-title { font-size: 1rem; color: #a4b0e0; margin-bottom: 10px; }
+        .social-links { display: flex; flex-direction: column; gap: 8px; font-size: 0.9rem; }
+        .social-links a, .social-links span { color: #6a7baa; text-decoration: none; transition: 0.3s; }
+        .social-links a:hover { color: #ffffff; text-shadow: 0 0 10px rgba(164, 176, 224, 0.8); }
+        .co-creator { font-size: 1.1rem; color: #a4b0e0; }
+        .thanks-title { font-size: 1.1rem; color: #a4b0e0; margin-bottom: 15px; }
+        .thanks-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+        .thanks-list li { font-size: 0.95rem; color: #6a7baa; }
+
+        /* ========== 探索页 ========== */
+        #page-explore {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #1e2a4a 0%, #0a0f24 60%, #020411 100%);
+            z-index: 100; display: none; flex-direction: column; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.8s ease; overflow: hidden;
         }
-        .story-title-cn { color: #e2e8f0; }
-        .story-title-slash { color: #e2e8f0; font-style: italic; margin: 0 5px; transform: skewX(-15deg); display: inline-block; }
-        .story-title-sub { color: #6e7bd1; font-weight: 400; text-shadow: 0 0 20px rgba(110, 123, 209, 0.4); }
+        #page-explore.show { display: flex; opacity: 1; }
+        .explore-header { text-align: center; margin-bottom: 60px; font-family: 'Georgia', serif; }
+        .explore-header h1 { font-size: 1.8rem; font-style: italic; color: #b5c1ec; font-weight: 400; margin-bottom: 15px; }
+        .explore-header h2 { font-size: 1.6rem; color: #c8d4f0; font-weight: 600; letter-spacing: 5px; }
+        .explore-options { display: flex; flex-direction: column; gap: 80px; text-align: center; }
+        .explore-item { text-decoration: none; cursor: pointer; transition: all 0.4s ease; display: flex; flex-direction: column; align-items: center; }
+        .explore-item:hover { transform: scale(1.1); }
+        .explore-cn { font-size: 2.2rem; color: #e0e8ff; font-weight: 700; letter-spacing: 8px; margin-bottom: 10px; transition: 0.4s; }
+        .explore-item:hover .explore-cn { color: #ffffff; text-shadow: 0 0 25px #ffffff, 0 0 40px #6a9eff; }
+        .explore-en { font-family: 'Georgia', serif; font-size: 1.6rem; font-style: italic; color: #94a3b8; transition: 0.4s; }
+        .explore-item:hover .explore-en { color: #aaccff; }
+        
+        /* 返回按钮 */
+        .back-to-home {
+            position: absolute; bottom: 40px; color: #6a7baa; font-size: 1.05rem;
+            letter-spacing: 2px; transition: 0.3s; cursor: pointer;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .back-to-home:hover { color: #ffffff; text-shadow: 0 0 15px #aaccff; }
+        .back-to-home span { font-family: 'Georgia', serif; font-style: italic; font-size: 1.1rem; opacity: 0.7; }
+
+        /* ========== 进入转场 (线条切割) ========== */
+        #transition-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000000; z-index: 9999; display: none;
+            justify-content: center; align-items: center; overflow: hidden;
+        }
+        .slice-line { position: absolute; width: 2px; height: 150vh; background: #ffffff; box-shadow: 0 0 20px #ffffff, 0 0 50px #6a9eff; transform-origin: center; }
+        .slice-line.left { transform: rotate(35deg) translateX(-100vw); }
+        .slice-line.right { transform: rotate(35deg) translateX(100vw); }
+        .animate-slice .slice-line.left { animation: sliceLeft 1.2s cubic-bezier(0.8, 0, 0.2, 1) forwards; }
+        .animate-slice .slice-line.right { animation: sliceRight 1.2s cubic-bezier(0.8, 0, 0.2, 1) forwards; }
+        @keyframes sliceLeft { 0% { transform: rotate(35deg) translateX(-100vw); } 50% { transform: rotate(35deg) translateX(0); opacity: 1; } 100% { transform: rotate(35deg) translateX(-100vw); opacity: 0; } }
+        @keyframes sliceRight { 0% { transform: rotate(35deg) translateX(100vw); } 50% { transform: rotate(35deg) translateX(0); opacity: 1; } 100% { transform: rotate(35deg) translateX(100vw); opacity: 0; } }
+        .animate-slice { animation: fadeInOut 1.2s ease-in-out forwards; }
+        @keyframes fadeInOut { 0% { background: rgba(0,0,0,0); } 50% { background: rgba(0,0,0,1); } 100% { background: rgba(0,0,0,1); } }
 
         /* =========================================
-           左右分栏的列表结构
+           ⭐️ 全新返回转场 (极简黑屏渐隐) ⭐️
            ========================================= */
-        .list-row {
-            display: flex;
-            margin-bottom: 20px;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
+        #fade-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000000; z-index: 9999; 
+            display: block; opacity: 0; pointer-events: none;
+            transition: opacity 0.4s ease; /* 渐隐动画时长 */
         }
-        .list-row.show {
-            opacity: 1;
-            transform: translateY(0);
+        #fade-overlay.show {
+            opacity: 1; pointer-events: auto;
         }
 
-        /* 左侧分类标签 (可点击) */
-        .row-label {
-            width: 150px;
-            flex-shrink: 0;
-            font-size: 1.6rem;
-            color: #b0c4de;
-            letter-spacing: 2px;
-            padding-top: 2px;
-            cursor: pointer;
-            user-select: none;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-            transition: all 0.4s ease;
-        }
-        .row-label:hover { color: #ffffff; }
-        
-        /* 展开时的颜色渐深/高亮样式 */
-        .row-label.open { 
-            color: #ffffff; 
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.6); 
-        }
-
-        /* 季数旁边的小箭头 */
-        .season-arrow {
-            font-size: 0.9rem;
-            margin-top: 10px;
-            color: #6e7bd1;
-            transition: transform 0.3s ease;
-        }
-        .row-label.open .season-arrow { transform: rotate(180deg); }
-
-        /* 外层折叠 */
-        .season-content-wrapper {
-            flex-grow: 1;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .season-content-wrapper.open {
-            max-height: 1500px;
-        }
-
-        /* 右侧内容区 */
-        .row-content {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        /* =========================================
-           内层折叠：1-12 章节
-           ========================================= */
-        .toggle-item {
-            font-size: 1.15rem;
-            color: #b0c4de;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.4s ease;
-            font-family: 'Georgia', serif;
-            font-style: italic;
-            padding-bottom: 5px;
-        }
-        .toggle-item:hover { color: #ffffff; }
-        
-        /* 点开 1-12 时的颜色渐深样式 */
-        .toggle-item.open { 
-            color: #ffffff; 
-            text-shadow: 0 0 10px rgba(255,255,255,0.5);
-        }
-
-        .toggle-arrow {
-            font-size: 0.8rem;
-            color: #6e7bd1;
-            transition: transform 0.4s ease;
-        }
-        .toggle-item.open .toggle-arrow { transform: rotate(180deg); }
-
-        .chapter-grid-wrapper {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .chapter-grid-wrapper.open { max-height: 1000px; }
-
-        /* 网格排版 */
-        .chapter-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-auto-flow: column; 
-            grid-template-rows: repeat(6, auto); 
-            gap: 20px 40px;
-            padding: 20px 0;
-            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
-            margin-bottom: 10px;
-        }
-
-        .episode-item {
-            font-size: 1.05rem;
-            color: #8494b0;
-            display: flex;
-            align-items: center;
-            transition: all 0.3s;
-            cursor: default;
-        }
-        .episode-item:hover {
-            color: #ffffff;
-            transform: translateX(5px);
-            text-shadow: 0 0 10px rgba(255,255,255,0.4);
-        }
-        .ep-num {
-            font-style: italic; font-family: 'Georgia', serif;
-            color: #6e7bd1; margin-right: 12px; width: 25px;
-            display: inline-block; font-size: 1.15rem;
-        }
-
-        /* 普通大纲文本 */
-        .outline-text {
-            font-size: 1.15rem;
-            color: #8494b0;
-            font-family: 'Georgia', serif;
-            font-style: italic;
-            transition: color 0.3s;
-        }
-        .outline-text:hover { color: #e2e8f0; }
+        /* 模态框 */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 5, 15, 0.75); backdrop-filter: blur(12px); display: flex; justify-content: center; align-items: center; visibility: hidden; opacity: 0; transition: 0.3s; z-index: 2000; }
+        .modal-overlay.active { visibility: visible; opacity: 1; }
+        .modal-content { background: rgba(15, 22, 40, 0.95); max-width: 550px; width: 90%; border-radius: 60px; padding: 35px; border: 1px solid rgba(120, 160, 255, 0.4); text-align: center; position: relative; transform: scale(0.9); transition: 0.3s; }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-close { position: absolute; top: 18px; right: 25px; font-size: 2.2rem; cursor: pointer; color: #a0b8e0; background: none; border: none; }
+        .modal-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 5px solid rgba(130, 170, 255, 0.6); margin-bottom: 15px; }
+        .modal-name { font-size: 2.3rem; font-weight: 800; color: #b0d0ff; margin-bottom: 12px; }
+        .modal-story { font-size: 1.1rem; line-height: 1.8; color: #c8d8f0; background: rgba(10, 18, 35, 0.8); padding: 25px; border-radius: 40px; text-align: left; border-left: 6px solid #6a9eff; max-height: 280px; overflow-y: auto; }
 
         /* ========== 手机端适配 ========== */
         @media (max-width: 768px) {
-            .top-navbar { padding: 0 20px; }
-            .main-container { flex-direction: column; }
-            .sidebar { width: 100%; padding: 40px 20px 40px 60px; }
-            .menu-item.long-line::before { top: -200px; }
+            .main-container { padding: 10px 15px 40px; }
+            .navbar { flex-direction: column; padding: 15px; gap: 10px; }
+            .nav-links { height: auto; flex-wrap: wrap; justify-content: center; gap: 10px; }
+            .wave-1, .wave-2, .wave-3, .wave-4, .wave-5 { transform: translateY(0); padding: 5px; }
+            .nav-item::after { display: none !important; }
             
-            #main-story-view { padding: 80px 20px 40px; }
-            .story-header { font-size: 2.2rem; margin-bottom: 40px; }
-            .close-story-btn { top: 15px; right: 20px; font-size: 0.9rem; padding: 5px 15px;}
+            .nav-start-btn { margin: 15px 0; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 15px; width: 100%; }
             
-            .list-row { flex-direction: column; margin-bottom: 25px; }
-            .row-label {
-                width: 100%;
-                margin-bottom: 5px;
-                font-size: 1.4rem;
-                border-bottom: 1px solid rgba(110, 123, 209, 0.15);
-                padding-bottom: 8px;
-            }
-            
-            /* 手机端恢复单列 */
-            .chapter-grid { 
-                grid-template-columns: 1fr; 
-                grid-auto-flow: row;
-                grid-template-rows: auto;
-                gap: 15px; 
-            }
+            .start-hero { height: 200px; margin-bottom: 30px; }
+            .start-text-cn { font-size: 3rem; }
+            .start-text-en { font-size: 2.5rem; }
+            .start-line { height: 120px; }
+
+            .footer-content { grid-template-columns: 1fr; gap: 30px; text-align: center; }
+            .social-links { align-items: center; }
+            .explore-cn { font-size: 1.8rem; letter-spacing: 4px; }
+            .explore-options { gap: 50px; }
         }
     </style>
 </head>
 <body>
 
-    <header class="top-navbar">
-        <div class="nav-logo">万象企划 TE-Planning</div>
-        <a href="index.html" class="back-btn">← 返回首页</a>
-    </header>
+    <!-- ⭐️ 隐藏的音效标签 (请确保上传了 start.mp3) ⭐️ -->
+    <audio id="startSound" src="start.mp3" preload="auto"></audio>
 
-    <main class="main-container">
-        <aside class="sidebar">
-            <div class="menu-group">
-                <a class="menu-item long-line" onclick="openMainStory()">
-                    <span class="menu-text">主線</span>
-                </a>
-                <a href="#" class="menu-item short-line"><span class="menu-text">支線/番外</span></a>
-                <a href="#" class="menu-item short-line"><span class="menu-text">角色个人</span></a>
-            </div>
-            <div class="menu-group large-gap">
-                <a href="#" class="menu-item long-line"><span class="menu-text">前篇</span></a>
-            </div>
-            <div class="menu-group large-gap">
-                <a href="#" class="menu-item long-line"><span class="menu-text">其他</span></a>
-            </div>
-        </aside>
-        <section class="content-area"></section>
-    </main>
+    <!-- 全局背景与特效 -->
+    <div class="starry-bg" id="starryBg"></div>
+    <div class="bg-fade-overlay" id="bgFadeOverlay"></div>
+    <canvas id="sakuraCanvas"></canvas>
 
-    <!-- =========================================
-         全屏：主线档案视图
-         ========================================= -->
-    <div id="main-story-view">
-        <div class="close-story-btn" onclick="closeMainStory()">✕ 收起</div>
-        
-        <div class="story-header">
-            <span class="story-title-cn">主線</span>
-            <span class="story-title-slash">/</span>
-            <span class="story-title-sub">万象卷</span>
-        </div>
-
-        <!-- ⭐️ 第1季 ⭐️ -->
-        <div class="list-row" id="row-1">
-            <div class="row-label" onclick="toggleSeason('season-1-content', this)">
-                第1季 <span class="season-arrow">▼</span>
+    <div class="main-container">
+        <!-- ================= 导航栏 ================= -->
+        <nav class="navbar">
+            <div class="logo">
+                <div class="logo-cn">万象企划</div>
+                <div class="logo-en">TE-Planning</div>
+                <div class="logo-sub">Omni-Planning</div>
             </div>
-            
-            <div class="season-content-wrapper" id="season-1-content">
-                <div class="row-content">
-                    
-                    <div class="toggle-item" onclick="toggleChapters('grid-1', this)">
-                        · 1-12 沉染底色 <span class="toggle-arrow">▼</span>
-                    </div>
-                    
-                    <div class="chapter-grid-wrapper" id="grid-1">
-                        <div class="chapter-grid">
-                            <div class="episode-item"><span class="ep-num">·1</span> 沉染底色·坠落</div>
-                            <div class="episode-item"><span class="ep-num">·2</span> 沉染底色·初识</div>
-                            <div class="episode-item"><span class="ep-num">·3</span> 沉染底色·原色石</div>
-                            <div class="episode-item"><span class="ep-num">·4</span> 沉染底色·风洞防御学院</div>
-                            <div class="episode-item"><span class="ep-num">·5</span> 沉染底色·祭祀</div>
-                            <div class="episode-item"><span class="ep-num">·6</span> 沉染底色·再无枷锁的青之飞鸟</div>
-                            <div class="episode-item"><span class="ep-num">·7</span> 沉染底色·夕阳行者</div>
-                            <div class="episode-item"><span class="ep-num">·8</span> 沉染底色·倒计时</div>
-                            <div class="episode-item"><span class="ep-num">·9</span> 沉染底色·于坠入黑暗时脱离</div>
-                            <div class="episode-item"><span class="ep-num">·10</span> 沉染底色·通行证</div>
-                            <div class="episode-item"><span class="ep-num">·11</span> 沉染底色·休闲日</div>
-                            <div class="episode-item"><span class="ep-num">·12</span> 沉染底色·我所不知的世界之大</div>
-                        </div>
-                    </div>
 
-                    <!-- 下方大纲 -->
-                    <div class="outline-text">· 12-16 环星大赛</div>
-                    <div class="outline-text">· 16-26 命運织之羁绊</div>
-                    <div class="outline-text">· 26-30 迷失与解离如梦魇</div>
+            <a href="javascript:void(0)" class="nav-start-btn" onclick="triggerTransition()">
+                <span class="nav-start-cn">开始</span>
+                <span class="nav-start-en">START</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="javascript:void(0)" class="nav-item wave-1" onclick="switchView('home')"><span class="nav-text">首页</span></a>
+                <a href="javascript:void(0)" class="nav-item wave-2" onclick="switchView('home')"><span class="nav-text">地区</span></a>
+                <a href="javascript:void(0)" class="nav-item wave-3" onclick="switchView('character')"><span class="nav-text">角色</span></a>
+                <a href="story.html" class="nav-item wave-4"><span class="nav-text">剧情</span></a>
+                <a href="javascript:void(0)" class="nav-item wave-5" onclick="switchView('home')"><span class="nav-text">作者</span></a>
+            </div>
+        </nav>
+
+        <!-- ================= 视图1：主界面 ================= -->
+        <div id="view-home" class="view-container active">
+            <section class="worldview-section">
+                <div class="worldview-title">✨ 简介 <span>序章</span></div>
+                <div class="worldview-text">
+                    在真实的地球上，存放着一个名为「万象卷」的浩瀚异世界。前所未有的全新世界就此展开。
+                </div>
+            </section>
+
+            <div class="start-hero" onclick="triggerTransition()">
+                <div class="start-hero-content">
+                    <div class="start-text-cn">开始</div>
+                    <div class="start-line"></div>
+                    <div class="start-text-en">START</div>
                 </div>
             </div>
+
+            <footer class="footer-section">
+                <div class="footer-divider">✨ 关于作者 | 一个热爱星辰与代码的幻想编织者 ✨</div>
+                <div class="footer-content">
+                    <div class="footer-col">
+                        <h3>About us</h3>
+                        <div class="author-name">作者:树</div>
+                        <p class="author-desc">
+                            哈啰大家好我是万象企划的创作者,也是一位香港的oc妈。现在ai发展的越来越好,我也终于可以将我这三年来的心血整合变成这个网页。希望大家能够享受我笔下的世界观和故事。
+                        </p>
+                        <div class="social-title">where are me?</div>
+                        <div class="social-links">
+                            <a href="https://v.douyin.com/9HtIgYxWaano/" target="_blank">dy: https://v.douyin.com/9HtIgYxWaano/</a>
+                            <a href="https://b23.tv/sYlaB2G" target="_blank">哔哩哔哩: https://b23.tv/sYlaB2G</a>
+                            <span>discord: mttc_1007</span>
+                        </div>
+                    </div>
+                    <div class="footer-col">
+                        <div class="co-creator">首席共创者:可可鳄</div>
+                    </div>
+                    <div class="footer-col">
+                        <div class="thanks-title">特别鸣谢</div>
+                        <ul class="thanks-list">
+                            <li>deepseek手机版</li>
+                            <li>deepseek网页版</li>
+                            <li>GitHub</li>
+                        </ul>
+                    </div>
+                </div>
+            </footer>
         </div>
 
-        <!-- 第2~5季 (纯占位) -->
-        <div class="list-row" id="row-2">
-            <div class="row-label">第2季</div>
+        <!-- ================= 视图2：角色图鉴 ================= -->
+        <div id="view-character" class="view-container">
+            <section class="gallery-section" style="margin-top: 40px;">
+                <div class="section-header">
+                    <h2>✦ 角色图鉴 ✦</h2>
+                    <div class="badge">✨ 共 <span id="characterCount">3</span> 位角色 ✨</div>
+                </div>
+                <div class="character-grid" id="characterGrid"></div>
+            </section>
         </div>
-        <div class="list-row" id="row-3">
-            <div class="row-label">第3季</div>
-        </div>
-        <div class="list-row" id="row-4">
-            <div class="row-label">第4季</div>
-        </div>
-        <div class="list-row" id="row-5">
-            <div class="row-label">第5季</div>
+    </div>
+
+    <!-- ================= 视图3：探索页 ================= -->
+    <div id="page-explore">
+        <div class="explore-header">
+            <h1>What would you like to explore?</h1>
+            <h2>您想了解什么？</h2>
         </div>
 
+        <div class="explore-options">
+            <div class="explore-item" onclick="alert('这里之后可以跳转到对应的页面！')">
+                <div class="explore-cn">企划</div>
+                <div class="explore-en">project</div>
+            </div>
+            <div class="explore-item" onclick="alert('这里之后可以跳转到对应的页面！')">
+                <div class="explore-cn">小说与世界观</div>
+                <div class="explore-en">stories and worldbuilding</div>
+            </div>
+        </div>
+
+        <div class="back-to-home" onclick="closeExplore()">
+            ← 返回主页 <span>Back to home</span>
+        </div>
+    </div>
+
+    <!-- 进入转场遮罩 -->
+    <div id="transition-overlay">
+        <div class="slice-line left"></div>
+        <div class="slice-line right"></div>
+    </div>
+
+    <!-- ⭐️ 全新极简黑屏转场遮罩 ⭐️ -->
+    <div id="fade-overlay"></div>
+
+    <!-- 角色弹窗 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <button class="modal-close" id="modalCloseBtn">&times;</button>
+            <img class="modal-avatar" id="modalAvatar" src="" alt="角色头像">
+            <div class="modal-name" id="modalName">角色名</div>
+            <div class="modal-story" id="modalStory">详细故事加载中...</div>
+        </div>
     </div>
 
     <script>
-        const mainStoryView = document.getElementById('main-story-view');
-        
-        const animationTargets = [
-            document.getElementById('row-1'),
-            document.getElementById('row-2'),
-            document.getElementById('row-3'),
-            document.getElementById('row-4'),
-            document.getElementById('row-5')
+        // =========================================
+        // 1. 角色数据渲染
+        // =========================================
+        const characterData = [
+            { name: "星野", image: "oc_pic1.png", desc: "喜欢收集星光的少女。", story: "星野是深空幻境中最年轻的星语者，她能与熄灭的星辰对话。她的背包里装满了来自不同星系的小星星，每一颗都藏着一个故事。" },
+            { name: "夜刃", image: "oc_pic2.png", desc: "冷酷的星海剑客。", story: "夜刃手持一把由陨铁锻造的长剑「霜星」，剑身刻着古老的星图。他沉默寡言，却会在星际海盗出现时第一个拔剑。" },
+            { name: "露娜", image: "oc_pic3.png", desc: "神秘的星轨魔法师。", story: "露娜总是戴着缀满星辰的兜帽，没人见过她的真容。她掌握着失传的星轨魔法，能召唤出会说话的星图。" }
         ];
 
-        function openMainStory() {
-            mainStoryView.classList.add('active');
-            
-            animationTargets.forEach(el => el.classList.remove('show'));
-            animationTargets.forEach((el, index) => {
-                setTimeout(() => {
-                    if (el) el.classList.add('show');
-                }, 200 + (index * 100));
+        const gridContainer = document.getElementById('characterGrid');
+        const characterCountSpan = document.getElementById('characterCount');
+        
+        function renderCards() {
+            gridContainer.innerHTML = '';
+            characterData.forEach((character) => {
+                const card = document.createElement('div'); card.className = 'character-card';
+                const avatar = document.createElement('img'); avatar.className = 'character-avatar'; avatar.src = character.image;
+                avatar.onerror = function() { this.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="140" height="140" viewBox="0 0 140 140"%3E%3Ccircle cx="70" cy="70" r="70" fill="%231a1e30"/%3E%3Ctext x="70" y="80" font-size="24" text-anchor="middle" fill="%236a9eff" font-family="Arial"%3E✨%3C/text%3E%3C/svg%3E'; };
+                const name = document.createElement('div'); name.className = 'character-name'; name.textContent = character.name;
+                const desc = document.createElement('div'); desc.className = 'character-desc'; desc.textContent = character.desc;
+                const btn = document.createElement('button'); btn.className = 'detail-btn'; btn.textContent = '查看详情';
+                btn.addEventListener('click', () => openModal(character));
+                card.appendChild(avatar); card.appendChild(name); card.appendChild(desc); card.appendChild(btn); gridContainer.appendChild(card);
             });
+            characterCountSpan.textContent = characterData.length;
+        }
+        renderCards();
 
-            mainStoryView.scrollTop = 0;
+        // 模态框
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalCloseBtn = document.getElementById('modalCloseBtn');
+        const modalAvatar = document.getElementById('modalAvatar');
+        const modalName = document.getElementById('modalName');
+        const modalStory = document.getElementById('modalStory');
+        
+        function openModal(character) {
+            modalAvatar.src = character.image;
+            modalAvatar.onerror = function() { this.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"%3E%3Ccircle cx="60" cy="60" r="60" fill="%231a1e30"/%3E%3Ctext x="60" y="70" font-size="28" text-anchor="middle" fill="%236a9eff" font-family="Arial"%3E✨%3C/text%3E%3C/svg%3E'; };
+            modalName.textContent = character.name; modalStory.textContent = character.story;
+            modalOverlay.classList.add('active');
+        }
+        function closeModal() { modalOverlay.classList.remove('active'); }
+        modalCloseBtn.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
+
+
+        // =========================================
+        // 2. 核心逻辑：视图切换
+        // =========================================
+        function switchView(viewName) {
+            document.querySelectorAll('.view-container').forEach(el => el.classList.remove('active'));
+            if (viewName === 'home') {
+                document.getElementById('view-home').classList.add('active');
+            } else if (viewName === 'character') {
+                document.getElementById('view-character').classList.add('active');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function closeMainStory() {
-            mainStoryView.classList.remove('active');
+
+        // =========================================
+        // 3. 转场动画与探索页逻辑
+        // =========================================
+        const transitionOverlay = document.getElementById('transition-overlay');
+        const explorePage = document.getElementById('page-explore');
+        const fadeOverlay = document.getElementById('fade-overlay');
+
+        // 进入探索页 (斜线切割)
+        function triggerTransition() {
+            // 播放音效
+            const sound = document.getElementById('startSound');
+            if (sound) {
+                sound.currentTime = 0;
+                sound.play().catch(e => console.log("音频尚未就绪或浏览器拦截了播放"));
+            }
+
+            transitionOverlay.style.display = 'flex';
+            void transitionOverlay.offsetWidth;
+            transitionOverlay.classList.add('animate-slice');
+
+            setTimeout(() => {
+                explorePage.classList.add('show');
+                window.scrollTo(0, 0);
+            }, 600);
+
+            setTimeout(() => {
+                transitionOverlay.classList.remove('animate-slice');
+                transitionOverlay.style.display = 'none';
+            }, 1200);
         }
 
-        function toggleSeason(contentId, labelElement) {
-            const content = document.getElementById(contentId);
-            content.classList.toggle('open');
-            labelElement.classList.toggle('open');
+        // ⭐️ 返回主页 (极简黑屏渐隐，绝对不卡 Bug) ⭐️
+        function closeExplore() {
+            // 1. 黑屏淡入
+            fadeOverlay.classList.add('show');
+
+            // 2. 等屏幕彻底变黑（0.4秒后），切换回主页
+            setTimeout(() => {
+                explorePage.classList.remove('show');
+                window.scrollTo(0, 0);
+
+                // 3. 再停顿 100 毫秒，让主页渲染一下，然后黑屏淡出
+                setTimeout(() => {
+                    fadeOverlay.classList.remove('show');
+                }, 100);
+
+            }, 400);
         }
 
-        function toggleChapters(gridId, toggleItem) {
-            const gridWrapper = document.getElementById(gridId);
-            gridWrapper.classList.toggle('open');
-            toggleItem.classList.toggle('open');
-        }
+
+        // =========================================
+        // 4. 背景与星空特效
+        // =========================================
+        const starryBg = document.getElementById('starryBg');
+        const bgFadeOverlay = document.getElementById('bgFadeOverlay');
+        window.addEventListener('scroll', () => {
+            let progress = Math.min(1, window.scrollY / (window.innerHeight * 0.8));
+            starryBg.style.opacity = 1 - progress; bgFadeOverlay.style.opacity = progress * 0.9;
+        });
+
+        (function starAnimation() {
+            const canvas = document.getElementById('sakuraCanvas'); 
+            const ctx = canvas.getContext('2d');
+            function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+            window.addEventListener('resize', resizeCanvas); resizeCanvas();
+            const starCount = window.innerWidth < 600 ? 40 : 80; 
+            let stars = [];
+            class Star {
+                constructor() { this.reset(true); }
+                reset(randomY = false) {
+                    this.x = Math.random() * canvas.width; this.y = randomY ? Math.random() * canvas.height : -30 - Math.random() * 100;
+                    this.size = Math.random() * 4 + 2; 
+                    this.speedY = Math.random() * 0.8 + 0.3; this.speedX = (Math.random() - 0.5) * 0.5;
+                    this.rotation = Math.random() * Math.PI * 2; this.rotateSpeed = (Math.random() - 0.5) * 0.03;
+                    this.pulseSpeed = Math.random() * 0.02 + 0.01; this.pulseTime = Math.random() * Math.PI * 2;
+                    this.baseOpacity = Math.random() * 0.5 + 0.4; this.opacity = this.baseOpacity;
+                }
+                update() {
+                    this.y += this.speedY; this.x += this.speedX + Math.sin(this.y * 0.01) * 0.5; 
+                    this.rotation += this.rotateSpeed; this.pulseTime += this.pulseSpeed;
+                    this.opacity = this.baseOpacity + Math.sin(this.pulseTime) * 0.3;
+                    if (this.y > canvas.height + 30 || this.x < -50 || this.x > canvas.width + 50) this.reset(false);
+                }
+                draw(ctx) {
+                    ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.rotation);
+                    let currentSize = this.size * (1 + Math.sin(this.pulseTime) * 0.3);
+                    ctx.beginPath(); ctx.moveTo(0, -currentSize * 1.5); 
+                    ctx.quadraticCurveTo(0, 0, currentSize * 1.5, 0); 
+                    ctx.quadraticCurveTo(0, 0, 0, currentSize * 1.5); 
+                    ctx.quadraticCurveTo(0, 0, -currentSize * 1.5, 0); 
+                    ctx.quadraticCurveTo(0, 0, 0, -currentSize * 1.5); 
+                    ctx.closePath(); ctx.fillStyle = `rgba(181, 193, 236, ${this.opacity})`;
+                    ctx.shadowColor = 'rgba(181, 193, 236, 0.8)'; ctx.shadowBlur = 15;
+                    ctx.fill(); ctx.restore();
+                }
+            }
+            function initStars() { stars = []; for (let i = 0; i < starCount; i++) stars.push(new Star()); }
+            function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); stars.forEach(star => { star.update(); star.draw(ctx); }); requestAnimationFrame(animate); }
+            initStars(); animate(); window.addEventListener('resize', () => initStars());
+        })();
     </script>
 </body>
 </html>
