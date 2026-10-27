@@ -12,7 +12,7 @@
             background-image: radial-gradient(circle at center, #0a1228 0%, #020411 80%);
             color: #e2e8f0;
             font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            overflow: hidden; /* 桌面端不滚动 */
+            overflow: hidden; 
         }
 
         /* ========== 顶部导航栏 ========== */
@@ -46,12 +46,10 @@
             position: absolute;
             width: 1000px;
             height: 1300px;
-            /* 缩放原点设在左上角，方便 JS 精准控制 */
             transform-origin: top left; 
             transition: transform 0.3s ease;
         }
 
-        /* 手机端允许页面上下滚动，以看全底部的主大陆 */
         @media (max-width: 768px) {
             body { overflow-y: auto; overflow-x: hidden; }
             .map-wrapper {
@@ -99,7 +97,7 @@
             color: #ffffff;
         }
 
-        /* ⭐️ 展开后的地球位置 (飞到左上角) ⭐️ */
+        /* 展开后的地球位置 */
         .expanded .earth {
             top: 10%; left: 18%;
             transform: translate(-50%, -50%) scale(0.6);
@@ -126,8 +124,9 @@
         }
         .expanded .node-item { opacity: 1; transform: translateY(0); }
 
-        .txt-reality { top: 18%; left: 50%; font-size: 1.1rem; color: #a0b4e0; letter-spacing: 2px; }
-        .txt-virtual { top: 25%; left: 40%; font-size: 1.1rem; letter-spacing: 2px; }
+        /* ⭐️ 重新调整了文字和节点位置，让线条衔接更自然 ⭐️ */
+        .txt-reality { top: 20%; left: 45%; font-size: 1.1rem; color: #a0b4e0; letter-spacing: 2px; }
+        .txt-virtual { top: 28%; left: 38%; font-size: 1.1rem; letter-spacing: 2px; }
 
         .time-flow {
             position: absolute; top: 35%; left: 20%;
@@ -159,8 +158,9 @@
         }
         .glass-box:hover img { opacity: 0.8; }
 
-        .box-kt12 { top: 35%; right: 15%; width: 180px; height: 110px; border-radius: 10px 50% 50% 10px; }
-        .box-memory { top: 55%; right: 25%; width: 120px; height: 50px; border-radius: 25px; }
+        /* KT12 下移，对齐虚拟 */
+        .box-kt12 { top: 40%; right: 20%; width: 180px; height: 110px; border-radius: 10px 50% 50% 10px; }
+        .box-memory { top: 55%; right: 20%; width: 120px; height: 50px; border-radius: 25px; }
 
         .curtain {
             position: absolute; top: 70%; left: 15%; right: 15%; height: 35px;
@@ -222,12 +222,24 @@
     <div class="map-wrapper">
         <div class="stage blueprint" id="stage">
             
+            <!-- ⭐️ 重新计算了 SVG 连线的路径坐标 ⭐️ -->
             <svg class="map-lines" viewBox="0 0 1000 1300" preserveAspectRatio="none">
-                <line x1="180" y1="130" x2="550" y2="234" class="line" />
-                <line x1="180" y1="130" x2="450" y2="325" class="line" />
-                <line x1="180" y1="130" x2="800" y2="455" class="line" />
+                <!-- 地球 -> 现实 -->
+                <line x1="180" y1="130" x2="480" y2="260" class="line" />
+                
+                <!-- 现实 -> 虚拟 (你要求的：现实下面有一条线再到虚拟) -->
+                <line x1="480" y1="260" x2="410" y2="370" class="line" />
+                
+                <!-- 虚拟 -> KT12实验场 (12实验场是在虚拟下面) -->
+                <line x1="410" y1="370" x2="700" y2="520" class="line" />
+
+                <!-- 地球 -> 记忆之庭 -->
                 <line x1="180" y1="130" x2="700" y2="715" class="line" />
+                
+                <!-- 贯穿唯幕层的纵线 -->
                 <line x1="180" y1="130" x2="180" y2="910" class="line" />
+                
+                <!-- 时之河 (双螺旋波动) -->
                 <path d="M 180 130 Q 280 450 180 650 T 180 1050" class="line" />
                 <path d="M 180 130 Q 80 450 180 650 T 180 1050" class="line" opacity="0.4" />
             </svg>
@@ -239,6 +251,7 @@
                 <span>源初之界</span>
             </div>
 
+            <!-- 位置相应做了微调 -->
             <div class="node-item txt-reality">现实</div>
             <div class="node-item txt-virtual">虚拟</div>
             
@@ -285,33 +298,26 @@
             }
         }
 
-        // ⭐️ 完美修复：统一缩放逻辑 ⭐️
         function resizeBlueprint() {
             const stage = document.getElementById('stage');
             const wrapper = document.querySelector('.map-wrapper');
             const isMobile = window.innerWidth <= 768;
 
             if (isMobile) {
-                // 手机端：以左上角为原点，按屏幕宽度等比例缩放整张 1000px 的图
-                const scale = (window.innerWidth - 20) / 1000; // 留出 20px 边距
+                const scale = (window.innerWidth - 20) / 1000;
                 stage.style.transform = `scale(${scale})`;
                 stage.style.left = '10px';
                 stage.style.top = '80px'; 
-                
-                // 动态撑开容器高度，让用户可以向下滑动看到主大陆
                 wrapper.style.height = (1300 * scale + 120) + 'px';
             } else {
-                // 平板/电脑端：完美居中缩放
                 const scaleX = window.innerWidth / 1000;
                 const scaleY = (window.innerHeight - 60) / 1300; 
-                const scale = Math.min(scaleX, scaleY, 1); // 保持比例，不放大超过原尺寸
-                
+                const scale = Math.min(scaleX, scaleY, 1);
                 stage.style.transform = `scale(${scale})`;
                 stage.style.left = '50%';
                 stage.style.top = '50%';
-                stage.style.marginLeft = '-500px'; // 1000/2
-                stage.style.marginTop = '-650px';  // 1300/2
-                
+                stage.style.marginLeft = '-500px';
+                stage.style.marginTop = '-650px';
                 wrapper.style.height = '100vh';
             }
         }
