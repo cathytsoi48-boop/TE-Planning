@@ -97,7 +97,7 @@
         .row-label.open .season-arrow { transform: rotate(180deg); }
 
         .season-content-wrapper { flex-grow: 1; max-height: 0; overflow: hidden; transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
-        .season-content-wrapper.open { max-height: 1500px; }
+        .season-content-wrapper.open { max-height: 2500px; }
         .row-content { display: flex; flex-direction: column; gap: 15px; }
 
         .toggle-item {
@@ -110,19 +110,24 @@
         .toggle-item.open .toggle-arrow { transform: rotate(180deg); }
 
         .chapter-grid-wrapper { max-height: 0; overflow: hidden; transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
-        .chapter-grid-wrapper.open { max-height: 1000px; }
+        .chapter-grid-wrapper.open { max-height: 1500px; }
 
         .chapter-grid {
-            display: grid; grid-template-columns: 1fr 1fr; grid-auto-flow: column; grid-template-rows: repeat(6, auto); 
+            display: grid; grid-template-columns: 1fr 1fr; grid-auto-flow: column; 
             gap: 20px 40px; padding: 20px 0; border-bottom: 1px dashed rgba(255, 255, 255, 0.1); margin-bottom: 10px;
         }
+        
+        /* 第一季12集，两列各6集 */
+        #grid-1 { grid-template-rows: repeat(6, auto); }
+        /* 第二季1-17重组，共17集，左9右8 */
+        #grid-2-1 { grid-template-rows: repeat(9, auto); }
 
-        /* ⭐️ 修复了绝对定位导致星星飞出屏幕的 Bug ⭐️ */
+        /* 章节条目 */
         .episode-item {
             font-size: 1.05rem; color: #4a5a7a;
             display: flex; align-items: center;
             transition: all 0.3s; cursor: pointer;
-            position: relative; /* 关键修复：让星星定位在自己身上 */
+            position: relative;
         }
         .episode-item:hover { color: #8494b0; transform: translateX(5px); }
         .ep-num { font-style: italic; font-family: 'Georgia', serif; color: #4a5a7a; margin-right: 12px; width: 25px; display: inline-block; font-size: 1.15rem; }
@@ -132,16 +137,11 @@
         .episode-item.is-updated .ep-num { color: #6e7bd1; }
         
         .episode-item.is-updated::before {
-            content: '✦'; 
-            color: #6e7bd1; 
-            position: absolute; 
-            left: -18px; /* 修正了定位 */
-            font-size: 0.9rem; 
-            text-shadow: 0 0 8px rgba(110, 123, 209, 0.8);
+            content: '✦'; color: #6e7bd1; position: absolute; left: -18px; font-size: 0.9rem; text-shadow: 0 0 8px rgba(110, 123, 209, 0.8);
         }
         .episode-item.is-updated:hover { color: #ffffff; text-shadow: 0 0 12px rgba(255,255,255,0.6); transform: translateX(5px); }
 
-        .outline-text { font-size: 1.15rem; color: #8494b0; font-family: 'Georgia', serif; font-style: italic; transition: color 0.3s; }
+        .outline-text { font-size: 1.15rem; color: #8494b0; font-family: 'Georgia', serif; font-style: italic; transition: color 0.3s; margin-top: 5px;}
         .outline-text:hover { color: #e2e8f0; }
 
 
@@ -199,7 +199,8 @@
             .list-row { flex-direction: column; margin-bottom: 25px; }
             .row-label { width: 100%; margin-bottom: 5px; font-size: 1.4rem; border-bottom: 1px solid rgba(110, 123, 209, 0.15); padding-bottom: 8px; }
             
-            .chapter-grid { grid-template-columns: 1fr; grid-auto-flow: row; grid-template-rows: auto; gap: 18px; }
+            /* 手机端恢复单列，并清除固定行数限制 */
+            .chapter-grid { grid-template-columns: 1fr; grid-auto-flow: row; grid-template-rows: auto !important; gap: 18px; }
             
             .reader-main-title { font-size: 1.8rem; margin-bottom: 40px; }
             .reader-content { padding: 40px 20px 80px; }
@@ -284,7 +285,7 @@
             </div>
         </div>
 
-        <!-- ⭐️ 第2季 (已去掉高亮颜色，统一风格) ⭐️ -->
+        <!-- ⭐️ 第2季 (史诗级细化，已补全 12-15 集) ⭐️ -->
         <div class="list-row" id="row-2">
             <div class="row-label" onclick="toggleSeason('season-2-content', this)">
                 第2季 <span class="season-arrow">▼</span>
@@ -292,9 +293,47 @@
             
             <div class="season-content-wrapper" id="season-2-content">
                 <div class="row-content">
-                    <div class="outline-text">· 1-18 重组</div>
-                    <div class="outline-text">· 18-20 克莱因.一</div>
-                    <div class="outline-text">· 21-30 星际航行学院.一</div>
+                    
+                    <!-- 1-17 重组 折叠 -->
+                    <div class="toggle-item" onclick="toggleChapters('grid-2-1', this)">
+                        · 1-17 重组 <span class="toggle-arrow">▼</span>
+                    </div>
+                    <div class="chapter-grid-wrapper" id="grid-2-1">
+                        <div class="chapter-grid">
+                            <div class="episode-item" onclick="openReader('第1集 · 重组.丢失的连接')"><span class="ep-num">·1</span> 重组.丢失的连接</div>
+                            <div class="episode-item" onclick="openReader('第2集 · 重组.解答')"><span class="ep-num">·2</span> 重组.解答</div>
+                            <div class="episode-item" onclick="openReader('第3集 · 重组.沧溟')"><span class="ep-num">·3</span> 重组.沧溟</div>
+                            <div class="episode-item" onclick="openReader('第4集 · 重组.数海之都')"><span class="ep-num">·4</span> 重组.数海之都</div>
+                            <div class="episode-item" onclick="openReader('第5集 · 重组.酒吧')"><span class="ep-num">·5</span> 重组.酒吧</div>
+                            <div class="episode-item" onclick="openReader('第6集 · 重组.许愿喷泉')"><span class="ep-num">·6</span> 重组.许愿喷泉</div>
+                            <div class="episode-item" onclick="openReader('第7集 · 重组.游戏人生')"><span class="ep-num">·7</span> 重组.游戏人生</div>
+                            <div class="episode-item" onclick="openReader('第8集 · 重组.Bug入侵之夜')"><span class="ep-num">·8</span> 重组.Bug入侵之夜</div>
+                            <div class="episode-item" onclick="openReader('第9集 · 重组.独战')"><span class="ep-num">·9</span> 重组.独战</div>
+                            <div class="episode-item" onclick="openReader('第10集 · 重组.逃脱')"><span class="ep-num">·10</span> 重组.逃脱</div>
+                            <div class="episode-item" onclick="openReader('第11集 · 重组.公司一')"><span class="ep-num">·11</span> 重组.公司一</div>
+                            <div class="episode-item" onclick="openReader('第12集 · 重组.病房茶话会')"><span class="ep-num">·12</span> 重组.病房茶话会</div>
+                            <div class="episode-item" onclick="openReader('第13集 · 重组.水坑')"><span class="ep-num">·13</span> 重组.水坑</div>
+                            <div class="episode-item" onclick="openReader('第14集 · 重组.雨神之殿')"><span class="ep-num">·14</span> 重组.雨神之殿</div>
+                            <div class="episode-item" onclick="openReader('第15集 · 重组.封印之下')"><span class="ep-num">·15</span> 重组.封印之下</div>
+                            <div class="episode-item" onclick="openReader('第16集 · 重组.格林棺')"><span class="ep-num">·16</span> 重组.格林棺</div>
+                            <div class="episode-item" onclick="openReader('第17集 · 重组.下潜')"><span class="ep-num">·17</span> 重组.下潜</div>
+                        </div>
+                    </div>
+
+                    <!-- 18-20 克莱因.一 折叠 -->
+                    <div class="toggle-item" onclick="toggleChapters('grid-2-2', this)">
+                        · 18-20 克莱因.一 <span class="toggle-arrow">▼</span>
+                    </div>
+                    <div class="chapter-grid-wrapper" id="grid-2-2">
+                        <div class="chapter-grid">
+                            <div class="episode-item" onclick="openReader('第18集 · 克莱因.碎片中')"><span class="ep-num">·18</span> 克莱因.碎片中</div>
+                            <div class="episode-item" onclick="openReader('第19集 · 克莱因.渊海中')"><span class="ep-num">·19</span> 克莱因.渊海中</div>
+                            <div class="episode-item" onclick="openReader('第20集 · 克莱因.暴君')"><span class="ep-num">·20</span> 克莱因.暴君</div>
+                        </div>
+                    </div>
+
+                    <!-- 第二季后段大纲 -->
+                    <div class="outline-text" style="margin-top: 15px;">· 21-30 星际航行学院.一</div>
                     <div class="outline-text">· 31-40 解息.一</div>
                     <div class="outline-text">· 40-55 融合刻</div>
                     <div class="outline-text">· 56-60 地球.一</div>
@@ -302,7 +341,7 @@
             </div>
         </div>
 
-        <!-- ⭐️ 第3季 (更新了“生命.一”) ⭐️ -->
+        <!-- ⭐️ 第3季 ⭐️ -->
         <div class="list-row" id="row-3">
             <div class="row-label" onclick="toggleSeason('season-3-content', this)">
                 第3季 <span class="season-arrow">▼</span>
@@ -318,7 +357,7 @@
             </div>
         </div>
 
-        <!-- ⭐️ 第4季 (最新加入) ⭐️ -->
+        <!-- ⭐️ 第4季 ⭐️ -->
         <div class="list-row" id="row-4">
             <div class="row-label" onclick="toggleSeason('season-4-content', this)">
                 第4季 <span class="season-arrow">▼</span>
@@ -394,38 +433,36 @@
         const readerTopTitle = document.getElementById('reader-top-title');
 
         const chapter1Text = `
-            <p>我还记得那一平淡的仲夏夜，我刚赶完午夜末班车回到家，正欲洗去身上的疲惫，躺在床上准备刷会小说。不知道是什么虫子在窗外发出烦人的嗡嗡声，正值炎暑开启的冷气也无法盖过它们声音。慢慢的困了，不知道什么时候睡着了，再次睁开眼睛就到了一个陌生的地方。</p>
+            <p>我还记得那一平淡的仲夏夜，我刚赶完午夜末班车回到家，正欲洗去身上的疲惫，躺在床上准备刷会小说。不知道是什么虫子在窗外发出烦人的嗡嗡声，正值炎暑，开启的冷气也无法盖过它们声音。慢慢的困了，不知道什么时候睡着了，再次睁开眼睛就到了一个陌生的地方。</p>
             
-            <p>像是一间魔法屋，紫色的帷幕开着，蜡烛在墙边的架子上安稳的燃烧着，头上的是一整片星空，我坐在柔软的椅子上。不知是风动吹过的宝石，还是吹过捕梦网和吊坠发出的叮当声，面前有一张桌子，其上一个魔法水晶球。</p>
-            
-            <p>一位白色长发的少女出现，带着一顶金色的魔法帽，她自称是一位占星师，又称我为读者，说：</p>
+            <p>像是一间魔法屋，紫色的帷幕开着，蜡烛在墙边的架子上安稳的燃烧着，头上的是一整片星空，我坐在柔软的椅子上。不知是风动吹过的宝石，还是吹过捕梦网和吊坠发出的叮当声，面前有一张桌子，其上一个魔法水晶球，一位白色长发的少女出现带着一顶金色的魔法帽，她自称是一位占星师又称我为读者，说：</p>
             <p>「命运正在召唤你，启程的时刻就是现在，醒来吧前往万象」</p>
             
-            <p>我醒了，躺在一个房间里。白色的灯光照得刺眼，我缓缓起身，在面前的是一块透明的菱晶矗立在房间的正中间，它把周围的光打散，璀璨的照亮着整个房间。小心的上前摸了摸，什么事情也没有发生。</p>
+            <p>我醒了，躺在一个房间里，白色的灯光照得刺眼，我缓缓起身，在我旁边躺着我许久未见的哥哥，他在多年前就出国留学了。他的皮肤是漆黑的，加上一头黑色的头发，多亏了我多年前送他的生日礼物——那块怀表我才认出他，没想到会在这种情况下再次见到他。在面前的是一块透明的菱晶矗立在房间的正中间，它把周围的光打散，璀璨地照亮着整个房间，小心的上前摸了摸，什么事情也没有发生。</p>
             
-            <p>身后是一个自动门，我沿着这条路走了出去，门正对的墙上是一个大窗户，窗外的星空一览无余。我不知道是什么地方，我只能一直走下去。</p>
+            <p>来不及思考太多我只想快点离开这个地方，我走到哥哥的身边蹲下，唤醒了他。身后是一个自动门，我决定先带着他离开这个奇怪的房间，沿着这条路走了出去，门正对的墙上是一个大窗户，窗外的星空一览无余，不知道这是什么地方，我们只能一直走下去。</p>
             
-            <p>我在漫长走廊走了一会，看见了一个似我梦境中的那位占卜师的白发少女，她倚靠的墙边坐着。我将她唤醒，过了一会儿她说：</p>
+            <p>我在漫长走廊走了一会，看见了一个似我梦境中的那位占卜师的白发少女，她倚靠的墙边坐着，我们将她唤醒，过了一会儿她说：</p>
             <p>「那个…不好意思…我的腿好像麻了…可以…拉我一把吗？」</p>
-            
             <p>我也没料到她开口第一句话居然是这种事情，过了一两秒我才反应过来，把她拉了起来。</p>
             
-            <p>她带领着我离开了这条漫长的走廊，眼前的景色却不断变化，我们终于走到了一个紧闭的门前，用力推开那扇门。</p>
+            <p>她带领着我们离开了这条漫长的走廊，眼前的景色却不断变化，我们终于走到了一个紧闭的门前，用力推开那扇门。</p>
             
-            <p>门后是一个废弃掉的楼梯间、断掉的楼梯、漂浮的画框、无人演奏却在发声的乐器、诡异声响的铃铛。在巨大又深不见底的楼梯间中漂浮着，地上长满苔藓还有流水在墙壁流出。有一只巨大的鸟类生物在窗外飞驰着，黑色的羽毛飘落。与此同时，它出现时的震动将墙壁的彩窗震碎，碎片飘得到处都是。</p>
+            <p>门后是一个废弃掉的楼梯间、断掉的楼梯、漂浮的画框、无人演奏却在发声的乐器、诡异声响的铃铛，在巨大又深不见底的楼梯间中漂浮着，地上长满苔藓还有流水在墙壁流出。有一只巨大的鸟类生物在窗外飞驰着，黑色的羽毛飘落。与此同时它出现时的震动将墙壁的彩窗震碎，碎片飘得到处都是。</p>
             
-            <p>我注视那些飘落的碎片，我的皮肤是漆黑的，有着不算短也不算长的黑色直发，与此同时斑斓的光芒为白发少女的发上染上色彩。</p>
+            <p>我注视那些飘落的碎片，碎片映出我的脸——我和哥哥一样，皮肤是漆黑的，有着不算短也不算长的黑色直发，与此同时斑斓的光芒为白发少女的发上染上色彩。</p>
             
-            <p>有一只黑色的巨大怪鸟冲入了楼梯间，胸口有12颗闪烁的红宝石，发出尖锐的尖啸，扇动的翅膀似要将我们吹飞。白发少女将一些漂浮的光粒子凝聚出一把剑，向巨大的黑鸟丢去，虽没造成伤害，但怪鸟躲开的时间也为我们提供了逃离的机会，她带着我朝着楼下跑去。她说战斗是在所难免的事情，至少在逃脱之前我们和那只怪鸟还有一场恶战。</p>
+            <p>有一只黑色的巨大怪鸟冲入了楼梯间，胸口有12颗闪烁的红宝石，发出尖锐的尖啸，扇动的翅膀似要将我们吹飞。白发少女将一些漂浮的光粒子凝聚出一把剑，向巨大的黑鸟丢去，虽没造成伤害，但怪鸟躲开的时间也为我们提供了逃离的机会，她带着我们朝着楼下跑去。她说战斗是在所难免的事情，至少在逃脱之前我们和那只怪鸟还有一场恶战。</p>
             
-            <p>我们逃到了一个隐蔽的平台，倒塌的建筑遮挡住我们的身影。「那是什么？」还没来得及平复好心情，我已提出了困扰我的疑问。</p>
+            <p>我们逃到了一个隐蔽的平台，倒塌的建筑遮挡住我们的身影，「那是什么？」还没来得及平复好心情，我已提出了困扰我的疑问。</p>
             <p>「那是名为终末的巨兽，虽然不知道它为什么会出现在这里，但很强大很危险，我们必须想方法离开这里。」</p>
+            <p>倒是哥哥，一路上没什么话说呢。</p>
             
-            <p>遥远的钟声从下方传来，厚重的传递到我们身边。经过我们的观察，每一层似乎都有着同样的摆设、构造或是场景，就像这样每一层都有一个钟。尽管它在每一层有着不同样式，可能是古老的座钟、电子钟。但也许它是一种可以令我们离开的指引。</p>
+            <p>遥远的钟声从下方传来，厚重的传递到我们身边。经过我们的观察每一层似乎都有着同样的摆设、构造或是场景，就像这样每一层都有一个钟，尽管他在每一层有着不同样式，可能是古老的座钟，电子钟。但也许它是一种可以令我们离开的指引。</p>
             
-            <p>钟声有规律的在隔一段时间内响起，我们寻着间断的钟声，走到了发出声音的楼层。该楼层的栏杆不再是完整的，而是有一个很大缺口。白发少女在到达这个楼层后便一言不发，忽然她扯着我的手，带着我从楼梯间不停坠落。</p>
+            <p>钟声有规律的在隔一段时间内响起，我们寻着间断的钟声，走到了发出声音的楼层，该楼层的栏杆不再是完整的而是有一个很大缺口，白发少女在到达这个楼层后便一言不发，忽然她扯着我的手带着我从楼梯间不停坠落。</p>
             
-            <p>耳边是烈风呼啸过的声音，周围的景色正在快速变化。直到我们冲出了怪异的楼梯间，在脱离的那刻，怪鸟与白发少女化作黑白色流光围绕在我身旁，我正在快速坠落，仿佛一颗明星划破这片五彩斑斓的星空。</p>
+            <p>耳边是烈风呼啸过的声音，周围的景色正在快速变化。直到我们冲出了怪异的楼梯间，在脱离的那刻怪鸟与白发少女化作黑白色流光围绕在我身旁，我和哥哥正在快速坠落，仿佛一颗明星划破这片五彩斑斓的星空。</p>
             
             <p>今夜，星光璀璨。</p>
         `;
