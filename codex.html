@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生物图鉴 - 万象企划</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: #020411;
+            background-image: radial-gradient(circle at center, #0a1228 0%, #020411 80%);
+            color: #e2e8f0;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* 顶部导航栏 */
+        .top-navbar {
+            position: fixed; top: 0; left: 0; width: 100%; height: 60px;
+            display: flex; justify-content: space-between; align-items: center; padding: 0 20px;
+            background: rgba(2, 4, 17, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(148, 163, 184, 0.15); z-index: 1000;
+        }
+        .nav-logo { font-size: 1rem; font-weight: 600; color: #e2e8f0; letter-spacing: 2px; white-space: nowrap; }
+        .back-btn {
+            color: #94a3b8; text-decoration: none; font-size: 0.9rem; letter-spacing: 1px;
+            padding: 6px 16px; border-radius: 20px; transition: all 0.3s ease; border: 1px solid transparent;
+        }
+        .back-btn:hover { color: #ffffff; background: rgba(148, 163, 184, 0.1); border-color: rgba(148, 163, 184, 0.3); }
+
+        /* 页面内容 */
+        .container { max-width: 1200px; margin: 100px auto 50px; padding: 0 20px; }
+        
+        .page-title {
+            text-align: center; font-size: 2.5rem; font-weight: 300; letter-spacing: 8px;
+            color: #ffffff; text-shadow: 0 0 20px rgba(110, 123, 209, 0.6); margin-bottom: 10px;
+        }
+        .page-subtitle {
+            text-align: center; font-size: 1rem; font-style: italic; color: #6e7bd1;
+            letter-spacing: 2px; margin-bottom: 60px; font-family: 'Georgia', serif;
+        }
+
+        /* 卡片网格 */
+        .bestiary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        /* 单个生物卡片 */
+        .beast-card {
+            background: rgba(15, 25, 45, 0.6);
+            border: 1px solid rgba(110, 123, 209, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        .beast-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(150, 180, 255, 0.8);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(110, 123, 209, 0.2);
+        }
+
+        /* 图片部分 */
+        .beast-img-wrapper {
+            width: 100%; height: 220px; overflow: hidden; position: relative;
+            background: #0a0f24;
+        }
+        .beast-img-wrapper img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .beast-card:hover .beast-img-wrapper img {
+            transform: scale(1.1);
+        }
+
+        /* 文字部分 */
+        .beast-info {
+            padding: 20px;
+            border-top: 1px solid rgba(110, 123, 209, 0.2);
+        }
+        .beast-name { font-size: 1.4rem; color: #e2e8f0; font-weight: 700; margin-bottom: 8px; letter-spacing: 1px;}
+        .beast-class { font-size: 0.85rem; color: #6e7bd1; font-family: 'Georgia', serif; font-style: italic; }
+
+        /* 放大查看器 */
+        #viewer {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.95); z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+            backdrop-filter: blur(10px);
+            flex-direction: column;
+        }
+        #viewer.active { opacity: 1; pointer-events: auto; }
+        
+        #viewer-img {
+            max-width: 90%; max-height: 80%; object-fit: contain;
+            border-radius: 10px; box-shadow: 0 0 50px rgba(110,123,209,0.3);
+            transform: scale(0.95); transition: transform 0.3s ease;
+        }
+        #viewer.active #viewer-img { transform: scale(1); }
+        
+        .viewer-text {
+            margin-top: 20px; color: #e2e8f0; font-size: 1.2rem;
+            letter-spacing: 2px; text-align: center;
+        }
+        
+        .close-tip {
+            position: absolute; bottom: 30px; color: #6a7baa; font-size: 0.9rem;
+            letter-spacing: 2px; animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+        @media (max-width: 768px) {
+            .bestiary-grid { grid-template-columns: 1fr; }
+            .beast-img-wrapper { height: 250px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="top-navbar">
+        <div class="nav-logo">万象企划 TE-Planning</div>
+        <a href="index.html" class="back-btn">← 返回首页</a>
+    </header>
+
+    <div class="container">
+        <h1 class="page-title">生物图鉴</h1>
+        <div class="page-subtitle">BESTIARY & CREATURES</div>
+
+        <!-- 图鉴网格 -->
+        <div class="bestiary-grid" id="bestiaryGrid">
+            <!-- 生物卡片会由 JS 生成 -->
+        </div>
+    </div>
+
+    <!-- 图片查看器 -->
+    <div id="viewer" onclick="closeViewer()">
+        <img id="viewer-img" src="" alt="生物CG">
+        <div class="viewer-text" id="viewer-text"></div>
+        <div class="close-tip">点击任意处关闭</div>
+    </div>
+
+    <script>
+        // =========================================
+        // ⭐️ 生物数据 (你以后在这里添加或修改) ⭐️
+        // =========================================
+        const bestiaryData = [
+            {
+                name: "终末的巨兽",
+                class: "未确认生物 · 极度危险",
+                image: "beast_bird.jpg", // 记得上传这张图片，或者改成你的图片名
+                desc: "胸口有12颗闪烁红宝石的巨大黑色怪鸟。发出尖锐的尖啸，扇动翅膀能轻易震碎彩窗，拥有极强的破坏力。"
+            },
+            {
+                name: "微光水母",
+                class: "灵能生物 · 温和",
+                image: "beast_jelly.jpg", 
+                desc: "漂浮在万象之海中的发光水母，能吸收周围的星辰碎片。它们散发出的幽蓝色光芒是迷失者的指路明灯。"
+            },
+            {
+                name: "虚空猎犬",
+                class: "异界生物 · 危险",
+                image: "beast_dog.jpg",
+                desc: "潜伏在数据海之都暗巷中的猎食者。没有实体，依靠吞噬电子信号维生，速度极快，难以捕捉。"
+            }
+        ];
+
+        const grid = document.getElementById('bestiaryGrid');
+
+        // 渲染图鉴
+        function renderBestiary() {
+            grid.innerHTML = '';
+            bestiaryData.forEach(beast => {
+                const card = document.createElement('div');
+                card.className = 'beast-card';
+                // 点击卡片打开大图
+                card.onclick = () => openViewer(beast);
+
+                card.innerHTML = `
+                    <div class="beast-img-wrapper">
+                        <img src="${beast.image}" alt="${beast.name}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'400\\' height=\\'220\\' viewBox=\\'0 0 400 220\\'%3E%3Crect width=\\'400\\' height=\\'220\\' fill=\\'%230a0f24\\'/%3E%3Ctext x=\\'200\\' y=\\'115\\' font-size=\\'20\\' text-anchor=\\'middle\\' fill=\\'%234a5a7a\\' font-family=\\'Arial\\'%3E待收录 CG%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="beast-info">
+                        <div class="beast-name">${beast.name}</div>
+                        <div class="beast-class">${beast.class}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        renderBestiary();
+
+        // 查看器逻辑
+        const viewer = document.getElementById('viewer');
+        const viewerImg = document.getElementById('viewer-img');
+        const viewerText = document.getElementById('viewer-text');
+
+        function openViewer(beast) {
+            viewerImg.src = beast.image;
+            // 如果图片没加载出来，用占位图
+            viewerImg.onerror = function() { 
+                this.src = 'data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'800\\' height=\\'600\\' viewBox=\\'0 0 800 600\\'%3E%3Crect width=\\'800\\' height=\\'600\\' fill=\\'%230a0f24\\'/%3E%3Ctext x=\\'400\\' y=\\'300\\' font-size=\\'40\\' text-anchor=\\'middle\\' fill=\\'%234a5a7a\\' font-family=\\'Arial\\'%3E该生物 CG 尚未记录%3C/text%3E%3C/svg%3E'; 
+            };
+            // 把描述展示在大图下方
+            viewerText.innerHTML = `<strong>${beast.name}</strong><br><span style="font-size:0.9rem; color:#8494b0;">${beast.desc}</span>`;
+            viewer.classList.add('active');
+        }
+
+        function closeViewer() {
+            viewer.classList.remove('active');
+        }
+    </script>
+</body>
+</html>

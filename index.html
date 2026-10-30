@@ -61,37 +61,40 @@
         /* 居中“开始”按钮 */
         .nav-start-btn {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-decoration: none; cursor: pointer; margin: 0 30px; transition: all 0.3s ease;
+            text-decoration: none; cursor: pointer; margin: 0 20px; transition: all 0.3s ease;
         }
         .nav-start-cn {
-            font-size: 2rem; font-weight: 800; color: #ffffff; letter-spacing: 5px;
+            font-size: 1.8rem; font-weight: 800; color: #ffffff; letter-spacing: 5px;
             text-shadow: 0 0 15px #6a9eff; transition: all 0.3s ease; line-height: 1.1;
         }
         .nav-start-en {
-            font-family: 'Georgia', serif; font-style: italic; font-size: 1.1rem;
+            font-family: 'Georgia', serif; font-style: italic; font-size: 1rem;
             color: #a4b0e0; letter-spacing: 4px; margin-top: 2px; transition: all 0.3s ease;
         }
         .nav-start-btn:hover .nav-start-cn { text-shadow: 0 0 25px #ffffff, 0 0 40px #6a9eff; transform: scale(1.05); }
         .nav-start-btn:hover .nav-start-en { color: #ffffff; text-shadow: 0 0 10px #aaccff; }
 
-        /* 右侧波浪菜单区 (5个) */
-        .nav-links { display: flex; align-items: flex-start; gap: 8px; height: 90px; position: relative; }
-        .nav-item { position: relative; text-decoration: none; display: flex; justify-content: center; align-items: center; padding: 10px 12px; transition: all 0.3s ease; transform: translateY(0); cursor: pointer; }
-        .nav-text { font-size: 1.05rem; font-weight: 600; color: #a4b0e0; letter-spacing: 1px; transition: all 0.3s ease; z-index: 2; }
+        /* 右侧波浪菜单区 (6个) */
+        .nav-links { display: flex; align-items: flex-start; gap: 5px; height: 80px; position: relative; }
+        .nav-item { position: relative; text-decoration: none; display: flex; justify-content: center; align-items: center; padding: 10px 8px; transition: all 0.3s ease; transform: translateY(0); cursor: pointer; }
+        .nav-text { font-size: 1rem; font-weight: 600; color: #a4b0e0; letter-spacing: 1px; transition: all 0.3s ease; z-index: 2; }
         
         .nav-item::after { content: ''; position: absolute; width: 1px; background: rgba(255, 255, 255, 0.4); box-shadow: 0 0 8px rgba(164, 176, 224, 0.6); transition: all 0.3s ease; z-index: 1; }
         
-        .wave-1::after { left: -5px; top: 20px; height: 50px; } 
-        .wave-2::after { right: -5px; bottom: 20px; height: 70px; } 
-        .wave-3::after { left: -5px; top: 40px; height: 40px; } 
-        .wave-4::after { right: -5px; top: 10px; height: 60px; } 
-        .wave-5::after { left: -5px; bottom: 10px; height: 50px; }
+        /* 重新分配6个菜单的高低和线条 */
+        .wave-1::after { left: -5px; top: 15px; height: 50px; } 
+        .wave-2::after { right: -5px; bottom: 15px; height: 65px; } 
+        .wave-3::after { left: -5px; top: 30px; height: 40px; } 
+        .wave-4::after { right: -5px; top: 10px; height: 55px; } 
+        .wave-5::after { left: -5px; bottom: 15px; height: 45px; }
+        .wave-6::after { right: -5px; top: 25px; height: 60px; }
         
         .wave-1 { transform: translateY(15px); } 
-        .wave-2 { transform: translateY(45px); } 
-        .wave-3 { transform: translateY(30px); } 
+        .wave-2 { transform: translateY(35px); } 
+        .wave-3 { transform: translateY(25px); } 
         .wave-4 { transform: translateY(5px); } 
-        .wave-5 { transform: translateY(35px); }
+        .wave-5 { transform: translateY(40px); } 
+        .wave-6 { transform: translateY(10px); }
 
         .nav-item:hover .nav-text { color: #ffffff; text-shadow: 0 0 10px #a4b0e0, 0 0 20px #6a9eff; }
         .nav-item:hover::after { background: #ffffff; box-shadow: 0 0 15px #ffffff, 0 0 30px #6a9eff; }
@@ -177,12 +180,8 @@
         .back-to-home:hover { color: #ffffff; text-shadow: 0 0 15px #aaccff; }
         .back-to-home span { font-family: 'Georgia', serif; font-style: italic; font-size: 1.1rem; opacity: 0.7; }
 
-        /* ========== 进入转场 (线条切割) ========== */
-        #transition-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000000; z-index: 9999; display: none;
-            justify-content: center; align-items: center; overflow: hidden;
-        }
+        /* ========== 转场动画 ========== */
+        #transition-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000; z-index: 9999; display: none; justify-content: center; align-items: center; overflow: hidden; }
         .slice-line { position: absolute; width: 2px; height: 150vh; background: #ffffff; box-shadow: 0 0 20px #ffffff, 0 0 50px #6a9eff; transform-origin: center; }
         .slice-line.left { transform: rotate(35deg) translateX(-100vw); }
         .slice-line.right { transform: rotate(35deg) translateX(100vw); }
@@ -193,13 +192,7 @@
         .animate-slice { animation: fadeInOut 1.2s ease-in-out forwards; }
         @keyframes fadeInOut { 0% { background: rgba(0,0,0,0); } 50% { background: rgba(0,0,0,1); } 100% { background: rgba(0,0,0,1); } }
 
-        /* 返回转场 (极简黑屏渐隐) */
-        #fade-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000000; z-index: 9999; 
-            display: block; opacity: 0; pointer-events: none;
-            transition: opacity 0.4s ease;
-        }
+        #fade-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000; z-index: 9999; display: block; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
         #fade-overlay.show { opacity: 1; pointer-events: auto; }
 
         /* 模态框 */
@@ -217,7 +210,7 @@
             .main-container { padding: 10px 15px 40px; }
             .navbar { flex-direction: column; padding: 15px; gap: 10px; }
             .nav-links { height: auto; flex-wrap: wrap; justify-content: center; gap: 10px; }
-            .wave-1, .wave-2, .wave-3, .wave-4, .wave-5 { transform: translateY(0); padding: 5px; }
+            .wave-1, .wave-2, .wave-3, .wave-4, .wave-5, .wave-6 { transform: translateY(0); padding: 5px; }
             .nav-item::after { display: none !important; }
             
             .nav-start-btn { margin: 15px 0; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 15px; width: 100%; }
@@ -236,16 +229,13 @@
 </head>
 <body>
 
-    <!-- 隐藏的音效标签 -->
     <audio id="startSound" src="start.mp3" preload="auto"></audio>
 
-    <!-- 全局背景与特效 -->
     <div class="starry-bg" id="starryBg"></div>
     <div class="bg-fade-overlay" id="bgFadeOverlay"></div>
     <canvas id="sakuraCanvas"></canvas>
 
     <div class="main-container">
-        <!-- ================= 导航栏 ================= -->
         <nav class="navbar">
             <div class="logo">
                 <div class="logo-cn">万象企划</div>
@@ -258,17 +248,17 @@
                 <span class="nav-start-en">START</span>
             </a>
 
-            <!-- ⭐️ 修改了这里的“地区”链接 ⭐️ -->
+            <!-- ⭐️ 这里加了“图鉴”按钮，重新排布了6个波浪线 ⭐️ -->
             <div class="nav-links">
                 <a href="javascript:void(0)" class="nav-item wave-1" onclick="switchView('home')"><span class="nav-text">首页</span></a>
                 <a href="region.html" class="nav-item wave-2"><span class="nav-text">地区</span></a>
                 <a href="javascript:void(0)" class="nav-item wave-3" onclick="switchView('character')"><span class="nav-text">角色</span></a>
                 <a href="story.html" class="nav-item wave-4"><span class="nav-text">剧情</span></a>
-                <a href="javascript:void(0)" class="nav-item wave-5" onclick="switchView('home')"><span class="nav-text">作者</span></a>
+                <a href="codex.html" class="nav-item wave-5"><span class="nav-text">图鉴</span></a>
+                <a href="javascript:void(0)" class="nav-item wave-6" onclick="switchView('home')"><span class="nav-text">作者</span></a>
             </div>
         </nav>
 
-        <!-- ================= 视图1：主界面 ================= -->
         <div id="view-home" class="view-container active">
             <section class="worldview-section">
                 <div class="worldview-title">✨ 简介 <span>序章</span></div>
@@ -316,7 +306,6 @@
             </footer>
         </div>
 
-        <!-- ================= 视图2：角色图鉴 ================= -->
         <div id="view-character" class="view-container">
             <section class="gallery-section" style="margin-top: 40px;">
                 <div class="section-header">
@@ -328,7 +317,6 @@
         </div>
     </div>
 
-    <!-- ================= 视图3：探索页 ================= -->
     <div id="page-explore">
         <div class="explore-header">
             <h1>What would you like to explore?</h1>
@@ -351,16 +339,13 @@
         </div>
     </div>
 
-    <!-- 进入转场遮罩 -->
     <div id="transition-overlay">
         <div class="slice-line left"></div>
         <div class="slice-line right"></div>
     </div>
 
-    <!-- 返回转场遮罩 -->
     <div id="fade-overlay"></div>
 
-    <!-- 角色弹窗 -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-content">
             <button class="modal-close" id="modalCloseBtn">&times;</button>
@@ -371,9 +356,7 @@
     </div>
 
     <script>
-        // =========================================
-        // 1. 角色数据渲染
-        // =========================================
+        // ========== 角色数据渲染 ==========
         const characterData = [
             { name: "星野", image: "oc_pic1.png", desc: "喜欢收集星光的少女。", story: "星野是深空幻境中最年轻的星语者，她能与熄灭的星辰对话。她的背包里装满了来自不同星系的小星星，每一颗都藏着一个故事。" },
             { name: "夜刃", image: "oc_pic2.png", desc: "冷酷的星海剑客。", story: "夜刃手持一把由陨铁锻造的长剑「霜星」，剑身刻着古老的星图。他沉默寡言，却会在星际海盗出现时第一个拔剑。" },
@@ -399,7 +382,6 @@
         }
         renderCards();
 
-        // 模态框
         const modalOverlay = document.getElementById('modalOverlay');
         const modalCloseBtn = document.getElementById('modalCloseBtn');
         const modalAvatar = document.getElementById('modalAvatar');
@@ -416,10 +398,7 @@
         modalCloseBtn.addEventListener('click', closeModal);
         modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
 
-
-        // =========================================
-        // 2. 核心逻辑：视图切换
-        // =========================================
+        // ========== 视图切换 ==========
         function switchView(viewName) {
             document.querySelectorAll('.view-container').forEach(el => el.classList.remove('active'));
             if (viewName === 'home') {
@@ -430,21 +409,16 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-
-        // =========================================
-        // 3. 转场动画与探索页逻辑
-        // =========================================
+        // ========== 转场 ==========
         const transitionOverlay = document.getElementById('transition-overlay');
         const explorePage = document.getElementById('page-explore');
         const fadeOverlay = document.getElementById('fade-overlay');
 
-        // 进入探索页
         function triggerTransition() {
-            // 播放音效
             const sound = document.getElementById('startSound');
             if (sound) {
                 sound.currentTime = 0;
-                sound.play().catch(e => console.log("音频尚未就绪或浏览器拦截了播放"));
+                sound.play().catch(e => console.log("音频被拦截"));
             }
 
             transitionOverlay.style.display = 'flex';
@@ -462,23 +436,16 @@
             }, 1200);
         }
 
-        // 返回主页 (极简黑屏渐隐)
         function closeExplore() {
             fadeOverlay.classList.add('show');
-
             setTimeout(() => {
                 explorePage.classList.remove('show');
                 window.scrollTo(0, 0);
-                setTimeout(() => {
-                    fadeOverlay.classList.remove('show');
-                }, 100);
+                setTimeout(() => { fadeOverlay.classList.remove('show'); }, 100);
             }, 400);
         }
 
-
-        // =========================================
-        // 4. 背景与星空特效
-        // =========================================
+        // ========== 背景特效 ==========
         const starryBg = document.getElementById('starryBg');
         const bgFadeOverlay = document.getElementById('bgFadeOverlay');
         window.addEventListener('scroll', () => {
