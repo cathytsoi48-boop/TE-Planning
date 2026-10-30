@@ -58,7 +58,6 @@
         .logo-en { font-size: 1.4rem; font-weight: 700; color: #a4b0e0; letter-spacing: 1px; }
         .logo-sub { font-size: 0.9rem; color: #6a7baa; margin-top: 4px; letter-spacing: 0.5px; }
         
-        /* 居中“开始”按钮 */
         .nav-start-btn {
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             text-decoration: none; cursor: pointer; margin: 0 20px; transition: all 0.3s ease;
@@ -74,27 +73,13 @@
         .nav-start-btn:hover .nav-start-cn { text-shadow: 0 0 25px #ffffff, 0 0 40px #6a9eff; transform: scale(1.05); }
         .nav-start-btn:hover .nav-start-en { color: #ffffff; text-shadow: 0 0 10px #aaccff; }
 
-        /* 右侧波浪菜单区 (6个) */
         .nav-links { display: flex; align-items: flex-start; gap: 5px; height: 80px; position: relative; }
         .nav-item { position: relative; text-decoration: none; display: flex; justify-content: center; align-items: center; padding: 10px 8px; transition: all 0.3s ease; transform: translateY(0); cursor: pointer; }
         .nav-text { font-size: 1rem; font-weight: 600; color: #a4b0e0; letter-spacing: 1px; transition: all 0.3s ease; z-index: 2; }
         
         .nav-item::after { content: ''; position: absolute; width: 1px; background: rgba(255, 255, 255, 0.4); box-shadow: 0 0 8px rgba(164, 176, 224, 0.6); transition: all 0.3s ease; z-index: 1; }
-        
-        /* 重新分配6个菜单的高低和线条 */
-        .wave-1::after { left: -5px; top: 15px; height: 50px; } 
-        .wave-2::after { right: -5px; bottom: 15px; height: 65px; } 
-        .wave-3::after { left: -5px; top: 30px; height: 40px; } 
-        .wave-4::after { right: -5px; top: 10px; height: 55px; } 
-        .wave-5::after { left: -5px; bottom: 15px; height: 45px; }
-        .wave-6::after { right: -5px; top: 25px; height: 60px; }
-        
-        .wave-1 { transform: translateY(15px); } 
-        .wave-2 { transform: translateY(35px); } 
-        .wave-3 { transform: translateY(25px); } 
-        .wave-4 { transform: translateY(5px); } 
-        .wave-5 { transform: translateY(40px); } 
-        .wave-6 { transform: translateY(10px); }
+        .wave-1::after { left: -5px; top: 15px; height: 50px; } .wave-2::after { right: -5px; bottom: 15px; height: 65px; } .wave-3::after { left: -5px; top: 30px; height: 40px; } .wave-4::after { right: -5px; top: 10px; height: 55px; } .wave-5::after { left: -5px; bottom: 15px; height: 45px; } .wave-6::after { right: -5px; top: 25px; height: 60px; }
+        .wave-1 { transform: translateY(15px); } .wave-2 { transform: translateY(35px); } .wave-3 { transform: translateY(25px); } .wave-4 { transform: translateY(5px); } .wave-5 { transform: translateY(40px); } .wave-6 { transform: translateY(10px); }
 
         .nav-item:hover .nav-text { color: #ffffff; text-shadow: 0 0 10px #a4b0e0, 0 0 20px #6a9eff; }
         .nav-item:hover::after { background: #ffffff; box-shadow: 0 0 15px #ffffff, 0 0 30px #6a9eff; }
@@ -111,7 +96,6 @@
         .worldview-title span { background: rgba(40, 60, 110, 0.7); padding: 4px 18px; border-radius: 40px; font-size: 1rem; color: #b0c8ff; border: 1px solid rgba(150, 180, 255, 0.3); }
         .worldview-text { font-size: 1.2rem; line-height: 1.9; color: #c8d4f0; text-indent: 2em; background: rgba(10, 20, 45, 0.5); padding: 20px 30px; border-radius: 30px; border-left: 8px solid #6a9eff; }
 
-        /* 巨大的 START 入口 */
         .start-hero { display: flex; justify-content: center; align-items: center; height: 300px; margin-bottom: 50px; position: relative; cursor: pointer; }
         .start-hero-content { display: flex; align-items: center; justify-content: center; gap: 20px; transition: transform 0.4s ease; }
         .start-hero:hover .start-hero-content { transform: scale(1.05); }
@@ -163,7 +147,7 @@
         .explore-header { text-align: center; margin-bottom: 60px; font-family: 'Georgia', serif; }
         .explore-header h1 { font-size: 1.8rem; font-style: italic; color: #b5c1ec; font-weight: 400; margin-bottom: 15px; }
         .explore-header h2 { font-size: 1.6rem; color: #c8d4f0; font-weight: 600; letter-spacing: 5px; }
-        .explore-options { display: flex; flex-direction: column; gap: 80px; text-align: center; }
+        .explore-options { display: flex; flex-direction: column; gap: 80px; text-align: center; z-index: 101; }
         .explore-item { text-decoration: none; cursor: pointer; transition: all 0.4s ease; display: flex; flex-direction: column; align-items: center; }
         .explore-item:hover { transform: scale(1.1); }
         .explore-cn { font-size: 2.2rem; color: #e0e8ff; font-weight: 700; letter-spacing: 8px; margin-bottom: 10px; transition: 0.4s; }
@@ -171,11 +155,44 @@
         .explore-en { font-family: 'Georgia', serif; font-size: 1.6rem; font-style: italic; color: #94a3b8; transition: 0.4s; }
         .explore-item:hover .explore-en { color: #aaccff; }
         
+        /* ⭐️ 企划介绍弹窗 (P2内容) ⭐️ */
+        #project-modal {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(2, 4, 17, 0.95); backdrop-filter: blur(15px);
+            z-index: 150; display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+        }
+        #project-modal.active { opacity: 1; pointer-events: auto; }
+        .project-content {
+            text-align: center; display: flex; flex-direction: column; align-items: center;
+            transform: translateY(20px); transition: transform 0.4s ease; max-width: 90%;
+        }
+        #project-modal.active .project-content { transform: translateY(0); }
+        
+        .project-text {
+            font-size: 1.2rem; line-height: 1.8; color: #e2e8f0; margin-bottom: 30px; letter-spacing: 1px;
+        }
+        .join-us {
+            font-family: 'Georgia', serif; font-size: 1.8rem; font-style: italic; color: #6e7bd1; margin-bottom: 20px;
+        }
+        .qr-box {
+            background: #ffffff; padding: 15px; border-radius: 15px;
+            box-shadow: 0 0 30px rgba(110, 123, 209, 0.4); margin-bottom: 20px;
+        }
+        .qr-box img { width: 200px; height: 200px; object-fit: cover; display: block; }
+        .qr-text { font-size: 0.9rem; color: #8494b0; margin-bottom: 40px; }
+        
+        .close-project-btn {
+            padding: 10px 30px; border-radius: 30px; border: 1px solid rgba(148, 163, 184, 0.3);
+            color: #94a3b8; cursor: pointer; background: transparent; transition: 0.3s; font-size: 1rem;
+        }
+        .close-project-btn:hover { color: #ffffff; background: rgba(148, 163, 184, 0.1); border-color: #ffffff; }
+
         /* 返回按钮 */
         .back-to-home {
             position: absolute; bottom: 40px; color: #6a7baa; font-size: 1.05rem;
             letter-spacing: 2px; transition: 0.3s; cursor: pointer;
-            display: flex; align-items: center; gap: 8px;
+            display: flex; align-items: center; gap: 8px; z-index: 101;
         }
         .back-to-home:hover { color: #ffffff; text-shadow: 0 0 15px #aaccff; }
         .back-to-home span { font-family: 'Georgia', serif; font-style: italic; font-size: 1.1rem; opacity: 0.7; }
@@ -195,7 +212,7 @@
         #fade-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000000; z-index: 9999; display: block; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
         #fade-overlay.show { opacity: 1; pointer-events: auto; }
 
-        /* 模态框 */
+        /* 模态框 (角色详情) */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 5, 15, 0.75); backdrop-filter: blur(12px); display: flex; justify-content: center; align-items: center; visibility: hidden; opacity: 0; transition: 0.3s; z-index: 2000; }
         .modal-overlay.active { visibility: visible; opacity: 1; }
         .modal-content { background: rgba(15, 22, 40, 0.95); max-width: 550px; width: 90%; border-radius: 60px; padding: 35px; border: 1px solid rgba(120, 160, 255, 0.4); text-align: center; position: relative; transform: scale(0.9); transition: 0.3s; }
@@ -224,6 +241,10 @@
             .social-links { align-items: center; }
             .explore-cn { font-size: 1.8rem; letter-spacing: 4px; }
             .explore-options { gap: 50px; }
+            
+            .project-text { font-size: 1rem; }
+            .join-us { font-size: 1.5rem; }
+            .qr-box img { width: 160px; height: 160px; }
         }
     </style>
 </head>
@@ -248,7 +269,6 @@
                 <span class="nav-start-en">START</span>
             </a>
 
-            <!-- ⭐️ 这里加了“图鉴”按钮，重新排布了6个波浪线 ⭐️ -->
             <div class="nav-links">
                 <a href="javascript:void(0)" class="nav-item wave-1" onclick="switchView('home')"><span class="nav-text">首页</span></a>
                 <a href="region.html" class="nav-item wave-2"><span class="nav-text">地区</span></a>
@@ -317,14 +337,32 @@
         </div>
     </div>
 
+    <!-- ================= 探索页 ================= -->
     <div id="page-explore">
+        <!-- 企划介绍弹窗 -->
+        <div id="project-modal">
+            <div class="project-content">
+                <div class="project-text">这是由树开启了一个名为万象的oc企划,<br>与 kookooaa 一同创作</div>
+                <div class="join-us">Join us</div>
+                
+                <div class="qr-box">
+                    <!-- ⭐️ 这里放你的二维码图片，请命名为 qrcode.jpg ⭐️ -->
+                    <img src="qrcode.jpg" alt="扫码加入频道" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\' viewBox=\'0 0 200 200\'%3E%3Crect width=\'200\' height=\'200\' fill=\'%23eee\'/%3E%3Ctext x=\'100\' y=\'100\' font-size=\'16\' text-anchor=\'middle\' fill=\'%23999\'%3E请上传qrcode.jpg%3C/text%3E%3C/svg%3E'">
+                </div>
+                
+                <div class="qr-text">扫一扫二维码，加入频道</div>
+                <button class="close-project-btn" onclick="closeProject()">返回</button>
+            </div>
+        </div>
+
         <div class="explore-header">
             <h1>What would you like to explore?</h1>
             <h2>您想了解什么？</h2>
         </div>
 
         <div class="explore-options">
-            <div class="explore-item" onclick="window.location.href='story.html'">
+            <!-- ⭐️ 点击企划不再跳转，而是打开弹窗 ⭐️ -->
+            <div class="explore-item" onclick="openProject()">
                 <div class="explore-cn">企划</div>
                 <div class="explore-en">project</div>
             </div>
@@ -409,10 +447,11 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ========== 转场 ==========
+        // ========== 转场与弹窗 ==========
         const transitionOverlay = document.getElementById('transition-overlay');
         const explorePage = document.getElementById('page-explore');
         const fadeOverlay = document.getElementById('fade-overlay');
+        const projectModal = document.getElementById('project-modal');
 
         function triggerTransition() {
             const sound = document.getElementById('startSound');
@@ -437,12 +476,21 @@
         }
 
         function closeExplore() {
+            projectModal.classList.remove('active'); // 如果开着弹窗，顺便关掉
             fadeOverlay.classList.add('show');
             setTimeout(() => {
                 explorePage.classList.remove('show');
                 window.scrollTo(0, 0);
                 setTimeout(() => { fadeOverlay.classList.remove('show'); }, 100);
             }, 400);
+        }
+
+        // 打开/关闭企划介绍
+        function openProject() {
+            projectModal.classList.add('active');
+        }
+        function closeProject() {
+            projectModal.classList.remove('active');
         }
 
         // ========== 背景特效 ==========
